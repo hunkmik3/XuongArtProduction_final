@@ -33,3 +33,50 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Large media files (handled by Cloudinary)
+public/videos/*.mp4
+src/images/*.mp4
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# Strapi CMS
+xuongart-cms/node_modules/
+xuongart-cms/.tmp/
+xuongart-cms/build/
+xuongart-cms/dist/
+xuongart-cms/.env
+xuongart-cms/.env.local
+xuongart-cms/.env.development.local
+xuongart-cms/.env.test.local
+xuongart-cms/.env.production.local
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Cloudinary
+cloudinary.json
+
+# Temporary files
+*.tmp
+*.temp
