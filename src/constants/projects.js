@@ -4,7 +4,7 @@ export const PROJECTS = [
     title: "CellPhoneS x ASUS Pro Art",
     client: "CellPhoneS, ASUS",
     tagline: "Creative power in every frame.",
-    media: "/videos/asusproart_v2.mp4", // đặt file vào public/videos/asusproart.mp4
+    media: "https://res.cloudinary.com/dwynoncvm/video/upload/v1703234567/asusproart_v2.mp4",
     type: "Video",
     align: "left",
   },
@@ -13,7 +13,7 @@ export const PROJECTS = [
     title: "CellphoneS x Xiaomi 13",
     client: "CellphoneS, Xiaomi",
     tagline: "Cinematic mobile storytelling.",
-    media: "/videos/Xiaomi13.mp4", // TODO: thay bằng video/ảnh dự án
+    media: "https://res.cloudinary.com/dwynoncvm/video/upload/v1703234567/Xiaomi13.mp4",
     type: "Video",
     align: "right",
   },
@@ -22,7 +22,7 @@ export const PROJECTS = [
     title: "OPPO Find N2 Flip",
     client: "OPPO",
     tagline: "Flip to the future.",
-    media: "/videos/Angle 1- Giai điệu gập mở_4.mp4", // TODO: thay bằng video/ảnh dự án
+    media: "https://res.cloudinary.com/dwynoncvm/video/upload/v1703234567/oppon2.mp4",
     type: "Video",
     align: "left",
   },
@@ -31,7 +31,7 @@ export const PROJECTS = [
     title: "CellphoneS x Samsung",
     client: "CellphoneS, Samsung",
     tagline: "Epic everyday moments.",
-    media: "/images/samsung.jpg", // TODO: thay bằng video/ảnh dự án
+    media: "/images/samsung.jpg",
     type: "Hình ảnh",
     align: "right",
   },
