@@ -364,7 +364,7 @@ export default function ImageProjectsPage() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="w-[98vw] max-w-7xl h-[75vh] bg-white rounded-2xl shadow-2xl overflow-hidden pointer-events-auto"
+                className="w-[98vw] max-w-7xl h-[85vh] bg-white rounded-2xl shadow-2xl overflow-hidden pointer-events-auto"
                 onClick={(e) => e.stopPropagation()}
               >
               {/* Header */}
