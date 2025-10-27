@@ -1,0 +1,59 @@
+# ENVIRONMENT VARIABLES TO ADD TO VERCEL
+
+## Copy và paste vào Vercel Environment Variables:
+
+### 1. NEXT_PUBLIC_STRAPI_API_URL
+Key: NEXT_PUBLIC_STRAPI_API_URL
+Value: https://xuongart-strapi.onrender.com
+⚠️ Lưu ý: Tạm thời dùng URL này, sẽ update sau khi deploy Strapi xong
+
+### 2. CLOUDINARY_CLOUD_NAME
+Key: CLOUDINARY_CLOUD_NAME
+Value: dwynoncvm
+
+### 3. CLOUDINARY_API_KEY
+Key: CLOUDINARY_API_KEY
+Value: 892494726275633
+
+### 4. CLOUDINARY_API_SECRET
+Key: CLOUDINARY_API_SECRET
+Value: 5Eluv2KY2MvKE4Omv4a0GdeExxc
+
+### 5. CLOUDINARY_URL
+Key: CLOUDINARY_URL
+Value: cloudinary://892494726275633:5Eluv2KY2MvKE4Omv4a0GdeExxc@dwynoncvm
+
+---
+
+## HOẶC COPY TOÀN BỘ ĐỂ IMPORT .env:
+
+NEXT_PUBLIC_STRAPI_API_URL=https://xuongart-strapi.onrender.com
+CLOUDINARY_CLOUD_NAME=dwynoncvm
+CLOUDINARY_API_KEY=892494726275633
+CLOUDINARY_API_SECRET=5Eluv2KY2MvKE4Omv4a0GdeExxc
+CLOUDINARY_URL=cloudinary://892494726275633:5Eluv2KY2MvKE4Omv4a0GdeExxc@dwynoncvm
+
+---
+
+## HƯỚNG DẪN THÊM VÀO VERCEL:
+
+### Cách 1: Thêm từng biến
+
+1. Trong màn hình Environment Variables Vercel
+2. Thêm 5 cặp Key-Value như trên
+3. Click "Save"
+
+### Cách 2: Import nhanh (Khuyên dùng)
+
+1. Tạo file `vercel-env.txt` với nội dung bên trên
+2. Click button "Import .env" trên Vercel
+3. Select file
+4. Click "Save"
+
+---
+
+⚠️ QUAN TRỌNG:
+- Sau khi Save → Vercel sẽ tự động redeploy
+- Đợi 2-3 phút để rebuild
+- Website sẽ hoạt động với Cloudinary integration
+

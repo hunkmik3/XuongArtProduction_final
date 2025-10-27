@@ -1,0 +1,79 @@
+# Environment Variables để thêm vào Vercel
+
+## Thêm các biến sau vào Vercel Environment Variables:
+
+### 1. NEXT_PUBLIC_STRAPI_API_URL
+Key: NEXT_PUBLIC_STRAPI_API_URL
+Value: https://xuongart-strapi.onrender.com
+⚠️ (Sẽ update sau khi deploy Strapi xong)
+
+### 2. CLOUDINARY_CLOUD_NAME
+Key: CLOUDINARY_CLOUD_NAME
+Value: [your_cloudinary_cloud_name]
+📝 Copy từ Cloudinary Dashboard
+
+### 3. CLOUDINARY_API_KEY
+Key: CLOUDINARY_API_KEY
+Value: [your_cloudinary_api_key]
+📝 Copy từ Cloudinary Dashboard
+
+### 4. CLOUDINARY_API_SECRET
+Key: CLOUDINARY_API_SECRET
+Value: [your_cloudinary_api_secret]
+📝 Copy từ Cloudinary Dashboard
+
+### 5. CLOUDINARY_URL
+Key: CLOUDINARY_URL
+Value: cloudinary://[api_key]:[api_secret]@[cloud_name]
+📝 Ví dụ: cloudinary://123456789:abcdefghijklmnop@xuongart
+
+---
+
+## Hướng dẫn thêm từng biến:
+
+### Cách 1: Nhập từng biến một (Khuyên dùng)
+
+1. Click vào field "Key" phía trên
+2. Nhập tên biến (ví dụ: NEXT_PUBLIC_STRAPI_API_URL)
+3. Click vào field "Value" bên cạnh
+4. Nhập giá trị
+5. Click "Save"
+
+Lặp lại cho mỗi biến!
+
+### Cách 2: Import .env (Nhanh hơn)
+
+1. Tạo file .env với nội dung:
+NEXT_PUBLIC_STRAPI_API_URL=https://xuongart-strapi.onrender.com
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+CLOUDINARY_URL=cloudinary://key:secret@cloud_name
+
+2. Click "Import .env" button
+3. Select file .env
+4. Click "Save"
+
+---
+
+## LƯU Ý:
+
+⚠️ Environment "All Environments" sẽ apply cho Production, Preview, Development
+
+⚠️ Sau khi add xong → Click "Save" ở góc dưới bên phải
+
+⚠️ Vercel sẽ tự động redeploy sau khi save (hoặc click Redeploy)
+
+---
+
+## Kiểm tra Cloudinary Credentials:
+
+Nếu bạn chưa có → Vào: https://cloudinary.com/console
+
+1. Login vào Cloudinary
+2. Dashboard → Product Environment Credentials
+3. Copy 3 thông tin:
+   - Cloud name
+   - API Key  
+   - API Secret
+
