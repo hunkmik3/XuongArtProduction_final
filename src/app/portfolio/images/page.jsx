@@ -358,13 +358,13 @@ export default function ImageProjectsPage() {
             {/* Backdrop - Covers entire screen including header */}
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[99998]" onClick={closeProject} style={{ top: 0, left: 0, right: 0, bottom: 0 }} />
             {/* Modal content */}
-            <div className="fixed inset-0 flex items-center justify-center z-[99999] pointer-events-none">
+            <div className="fixed inset-0 flex items-center justify-center z-[99999] pointer-events-none px-4 pt-4 sm:pt-0">
               <motion.div
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="w-[98vw] max-w-7xl h-[85vh] bg-white rounded-2xl shadow-2xl overflow-hidden pointer-events-auto"
+                className="w-[98vw] max-w-7xl h-[85vh] sm:h-[85vh] bg-white rounded-2xl shadow-2xl overflow-hidden pointer-events-auto mt-8 sm:mt-0"
                 onClick={(e) => e.stopPropagation()}
               >
               {/* Header */}
