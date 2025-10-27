@@ -13,7 +13,7 @@ export default function Home() {
       <ProjectsGallery />
       <Container className="mt-24 sm:mt-32">
         <FadeIn className="max-w-3xl">
-          <h1 className="font-display text-5xl font-medium tracking-tight text-neutral-950 [text-wrap:balance] sm:text-7xl">
+          <h1 className="font-display text-5xl font-bold tracking-tight text-neutral-950 [text-wrap:balance] sm:text-7xl">
             Xưởng Art – Biến ý tưởng thành trải nghiệm số
           </h1>
           <p className="mt-6 text-xl text-neutral-600">

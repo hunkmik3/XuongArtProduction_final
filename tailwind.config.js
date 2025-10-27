@@ -15,6 +15,10 @@ module.exports = {
         sans: ["Samsung Sharp Sans", "Mona Sans", ...defaultTheme.fontFamily.sans],
         display: ["Samsung Sharp Sans", "Mona Sans", ...defaultTheme.fontFamily.sans],
       },
+      fontWeight: {
+        'medium': '400', // Samsung Medium
+        'bold': '700',   // Samsung Bold
+      },
     },
   },
   plugins: [],

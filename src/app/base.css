@@ -5,6 +5,14 @@
   font-weight: 400;
   font-display: swap;
   font-style: normal;
+  src: url("../fonts/SamsungSharpSans-Medium_SMCP.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Samsung Sharp Sans";
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
   src: url("../fonts/SAMSUNGSHARPSANS-BOLD_SMCPS.TTF") format("truetype");
 }
 
