@@ -23,7 +23,7 @@ const Build = () => {
         author={{ name: "Client", role: "Brand manager" }}
         className="mt-12"
       >
-        XưởngArt làm việc rất chuyên nghiệp, bám sát timeline và giữ chất lượng
+        XUONGART làm việc rất chuyên nghiệp, bám sát timeline và giữ chất lượng
         hình ảnh đúng như cam kết.
       </Blockquote>
     </Section>

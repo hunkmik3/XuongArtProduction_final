@@ -1,223 +1,201 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { useEffect, useId, useRef, useState } from "react";
-import { motion, MotionConfig, useReducedMotion } from "framer-motion";
+import { motion, MotionConfig, useReducedMotion, AnimatePresence } from "framer-motion";
 import Container from "./Container";
 import Link from "next/link";
 import Logo from "./Logo";
-import { HiMenuAlt4 } from "react-icons/hi";
-import { IoMdClose } from "react-icons/io";
 import Button from "./Button";
 import clsx from "clsx";
-import Offices from "./Offices";
-import SocialMedia from "./SocialMedia";
 import Footer from "./Footer";
+import { useState, useEffect } from "react";
 
-const Header = ({
-  panelId,
-  invert = false,
-  icon: Icon,
-  expanded,
-  onToggle,
-  toggleRef,
-}) => {
-  // Container
+const Header = ({ invert = false }) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.mobile-menu-container')) {
+        setMobileMenuOpen(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [mobileMenuOpen]);
+
   return (
     <Container>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between h-20">
         {/* Logo */}
-        <Link href={"/"} aria-label="Home">
-          <Logo invert={invert}>XưởngArt</Logo>
+        <Link href={"/"} aria-label="Home" className="flex items-center h-full">
+          <Logo invert={invert} className="text-xl sm:text-2xl">XUONGART</Logo>
         </Link>
-        <div className="flex items-center gap-x-8">
-          <Button href={"/contact"} invert={invert}>
-            Liên Hệ Ngay
-          </Button>
-          <button
-            ref={toggleRef}
-            type="button"
-            onClick={onToggle}
-            aria-expanded={expanded.toString()}
-            aria-controls={panelId}
-            className={clsx(
-              "group -m-2.5 rounded-full p-2.5 transition",
-              invert ? "hover:bg-white/10" : "hover:bg-neutral-950/10"
-            )}
-            aria-label="Toggle navigation"
-          >
-            <Icon
+        <div className="flex items-center gap-x-8 h-full">
+          <nav className="hidden md:flex items-center gap-x-6 h-full">
+            <Link 
+              href="/portfolio" 
               className={clsx(
-                "h-6 w-6",
-                invert
-                  ? "fill-white group-hover:fill-neutral-200"
-                  : "fill-neutral-950 group-hover:fill-neutral-700"
+                "text-sm font-medium transition flex items-center h-full px-2",
+                invert ? "text-white hover:text-neutral-200" : "text-neutral-950 hover:text-neutral-700"
               )}
-            />
-          </button>
+            >
+              Dự án
+            </Link>
+            <Link 
+              href="/portfolio/images" 
+              className={clsx(
+                "text-sm font-medium transition flex items-center h-full px-2",
+                invert ? "text-white hover:text-neutral-200" : "text-neutral-950 hover:text-neutral-700"
+              )}
+            >
+              Dự án hình ảnh
+            </Link>
+            <Link 
+              href="/about" 
+              className={clsx(
+                "text-sm font-medium transition flex items-center h-full px-2",
+                invert ? "text-white hover:text-neutral-200" : "text-neutral-950 hover:text-neutral-700"
+              )}
+            >
+              Về chúng tôi
+            </Link>
+            <Link 
+              href="/process" 
+              className={clsx(
+                "text-sm font-medium transition flex items-center h-full px-2",
+                invert ? "text-white hover:text-neutral-200" : "text-neutral-950 hover:text-neutral-700"
+              )}
+            >
+              Quy trình
+            </Link>
+          </nav>
+          <div className="flex items-center h-full gap-x-4">
+            <div className="hidden md:block">
+              <Button href={"/contact"} invert={invert} className="text-xs sm:text-sm px-3 sm:px-4 py-1.5">
+                Liên Hệ Ngay
+              </Button>
+            </div>
+            
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className={clsx(
+                "md:hidden p-2 rounded-md transition-colors",
+                invert ? "text-white hover:bg-white/10" : "text-neutral-950 hover:bg-neutral-100"
+              )}
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 bg-black/50 md:hidden"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "tween", duration: 0.3 }}
+              className="mobile-menu-container fixed right-0 top-0 h-full w-[280px] bg-white shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex flex-col h-full p-6">
+                <div className="flex items-center justify-between mb-8">
+                  <Link href={"/"} onClick={() => setMobileMenuOpen(false)}>
+                    <Logo className="text-2xl">XUONGART</Logo>
+                  </Link>
+                  <button
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-2 hover:bg-neutral-100 rounded-md"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                
+                <nav className="flex flex-col gap-4 flex-1">
+                  <Link 
+                    href="/portfolio"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-lg font-medium text-neutral-950 hover:text-blue-600 py-2 border-b border-neutral-100"
+                  >
+                    Dự án
+                  </Link>
+                  <Link 
+                    href="/portfolio/images"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-lg font-medium text-neutral-950 hover:text-blue-600 py-2 border-b border-neutral-100"
+                  >
+                    Dự án hình ảnh
+                  </Link>
+                  <Link 
+                    href="/about"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-lg font-medium text-neutral-950 hover:text-blue-600 py-2 border-b border-neutral-100"
+                  >
+                    Về chúng tôi
+                  </Link>
+                  <Link 
+                    href="/process"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-lg font-medium text-neutral-950 hover:text-blue-600 py-2 border-b border-neutral-100"
+                  >
+                    Quy trình
+                  </Link>
+                </nav>
+                
+                <div className="mt-4 pt-4 border-t border-neutral-200">
+                  <Button href={"/contact"} className="w-full text-center">
+                    Liên Hệ Ngay
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Container>
-  );
-};
-const NavigationRow = ({ children }) => {
-  return (
-    <div className="even:mt-px sm:bg-neutral-950">
-      <Container>
-        <div className="grid grid-cols-1 sm:grid-cols-2">{children}</div>
-      </Container>
-    </div>
-  );
-};
-
-const NavigationItem = ({ href, children }) => {
-  return (
-    <Link
-      href={href}
-      className="group relative isolate -mx-6 bg-neutral-950 px-6 py-10 even:mt-px sm:mx-0 sm:px-0 sm:py-16 sm:odd:pr-16 sm:even:mt-0 sm:even:border-l sm:even:border-neutral-800 sm:even:pl-16"
-    >
-      {children}
-      <span className="absolute inset-y-0 -z-10 w-screen bg-neutral-900 opacity-0 transition group-odd:right-0 group-even:left-0 group-hover:opacity-100" />
-    </Link>
-  );
-};
-
-const Navigation = () => {
-  return (
-    <nav className="mt-px font-display text-5xl font-medium tracking-tight text-white">
-      <NavigationRow>
-        <NavigationItem href="/portfolio">Dự án</NavigationItem>
-        <NavigationItem href="/about">Về chúng tôi</NavigationItem>
-      </NavigationRow>
-      <NavigationRow>
-        <NavigationItem href="/process">Quy trình</NavigationItem>
-        <NavigationItem href="/blog">Blog</NavigationItem>
-      </NavigationRow>
-    </nav>
   );
 };
 
 const RootLayoutInner = ({ children }) => {
-  const panelId = useId();
-  const [expanded, setExpanded] = useState(false);
-  const openRef = useRef();
-  const closeRef = useRef();
-  const navRef = useRef();
   const shouldReduceMotion = useReducedMotion();
-  useEffect(() => {
-    // custom cursor
-    const dot = document.getElementById("cursor-dot");
-    const ring = document.getElementById("cursor-ring");
-    if (!dot || !ring) return;
-    const move = (e) => {
-      const { clientX: x, clientY: y } = e;
-      dot.style.transform = `translate(${x - 3}px, ${y - 3}px)`;
-      ring.style.transform = `translate(${x - 13}px, ${y - 13}px)`;
-    };
-    const accentOn = () => document.documentElement.classList.add("cursor-accent");
-    const accentOff = () => document.documentElement.classList.remove("cursor-accent");
-    window.addEventListener("mousemove", move);
-    document.querySelectorAll("a, button, [role='button']").forEach((el) => {
-      el.addEventListener("mouseenter", accentOn);
-      el.addEventListener("mouseleave", accentOff);
-    });
-    function onClick(event) {
-      if (event.target.closest("a")?.href === window.location.href) {
-        setExpanded(false);
-      }
-    }
-    window.addEventListener("click", onClick);
-
-    return () => {
-      window.removeEventListener("click", onClick);
-      window.removeEventListener("mousemove", move);
-      document.querySelectorAll("a, button, [role='button']").forEach((el) => {
-        el.removeEventListener("mouseenter", accentOn);
-        el.removeEventListener("mouseleave", accentOff);
-      });
-    };
-  }, []);
+  
   return (
     <MotionConfig transition={shouldReduceMotion ? { duration: 0 } : undefined}>
       <header>
-        {/* Cursor + Noise overlay */}
-        <div id="cursor-dot" className="cursor-dot" />
-        <div id="cursor-ring" className="cursor-ring" />
+        {/* Noise overlay */}
         <div className="noise-overlay" />
-        <div
-          className="absolute left-0 right-0 top-2 z-40 pt-14"
-          aria-hidden={expanded ? "true" : undefined}
-          inert={expanded ? "" : undefined}
-        >
+        <div className="absolute left-0 right-0 top-0 z-50">
           {/* Header */}
-          <Header
-            panelId={panelId}
-            icon={HiMenuAlt4}
-            toggleRef={openRef}
-            expanded={expanded}
-            onToggle={() => {
-              setExpanded((expanded) => !expanded);
-              window.setTimeout(() =>
-                closeRef.current?.focus({ preventScroll: true })
-              );
-            }}
-          />
+          <Header />
         </div>
-        <motion.div
-          layout
-          id={panelId}
-          style={{ height: expanded ? "auto" : "0.5rem" }}
-          className="relative z-50 overflow-hidden bg-neutral-950 pt-2"
-          aria-hidden={expanded ? undefined : "true"}
-          inert={expanded ? undefined : ""}
-        >
-          <motion.div layout className="bg-neutral-800">
-            <div ref={navRef} className="bg-neutral-950 pb-16 pt-14">
-              <Header
-                invert
-                panelId={panelId}
-                icon={IoMdClose}
-                toggleRef={closeRef}
-                expanded={expanded}
-                onToggle={() => {
-                  setExpanded((expanded) => !expanded);
-                  window.setTimeout(() =>
-                    openRef.current?.focus({ preventScroll: true })
-                  );
-                }}
-              />
-            </div>
-            {/* Navigation */}
-            <Navigation />
-            <div className="relative bg-neutral-950 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-neutral-800">
-              <Container>
-                <div className="grid grid-cols-1 gap-y-10 pb-16 pt-10 sm:grid-cols-2 sm:pt-16">
-                  <div>
-                    <h2 className="font-display text-base font-semibold text-white">
-                      Thông tin liên hệ
-                    </h2>
-                    <div className="mt-6 text-base text-neutral-300">
-                      <p>Our Office – Hồ Chí Minh City</p>
-                      <p className="mt-2">📍 172 Lâm Văn Bền, phường Tân Quy, Quận 7, HCM</p>
-                      <p className="mt-1">☎ 036 499 4647</p>
-                      <p className="mt-1">📧 ntnhan198.nd@gmail.com</p>
-                    </div>
-                  </div>
-                  <div className="sm:border-l sm:border-transparent sm:pl-16">
-                    <h2 className="font-display text-base font-semibold text-white">
-                      Kết nối
-                    </h2>
-                    <SocialMedia className="mt-6" invert />
-                  </div>
-                </div>
-              </Container>
-            </div>
-          </motion.div>
-        </motion.div>
       </header>
       <motion.div
         layout
         style={{ borderTopLeftRadius: 40, borderTopRightRadius: 40 }}
-        className="relative flex flex-auto overflow-hidden bg-white pt-14"
+        className="relative flex flex-auto overflow-hidden bg-white pt-20"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -12 }}
@@ -225,7 +203,7 @@ const RootLayoutInner = ({ children }) => {
       >
         <motion.div
           layout
-          className="relative isolate flex w-full flex-col pt-9"
+          className="relative isolate flex w-full flex-col pt-0"
         >
           <main className="w-full flex-auto">{children}</main>
           {/* Footer */}

@@ -4,9 +4,6 @@ export const navigation = [
   {
     title: "Dự án",
     links: [
-      { title: "CellPhoneS x ASUS Pro Art", href: "/#projects" },
-      { title: "CellphoneS x Xiaomi 13", href: "/#projects" },
-      { title: "OPPO Find N2 Flip", href: "/#projects" },
       {
         title: "Xem tất cả",
         href: "/portfolio",
@@ -18,7 +15,6 @@ export const navigation = [
     links: [
       { title: "Về chúng tôi", href: "/about" },
       { title: "Quy trình", href: "/process" },
-      { title: "Blog", href: "/blog" },
       { title: "Liên hệ", href: "/contact" },
     ],
   },

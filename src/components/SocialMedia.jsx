@@ -8,13 +8,13 @@ import {
 
 export const SocialMediaProfiles = [
   {
-    title: "Youtube",
+    title: "Instagram",
     href: "#",
     icon: BsYoutube,
   },
   {
     title: "Facebook",
-    href: "#",
+    href: "https://www.facebook.com/xuongartproduction",
     icon: BsFacebook,
   },
   {

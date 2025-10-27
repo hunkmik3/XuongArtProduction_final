@@ -2,6 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Projects Gallery Responsive Scaling */
+.projects-grid {
+  /* Default scale for large screens */
+  transform: scale(0.92);
+  transform-origin: center center;
+}
+
+/* Responsive scaling based on screen size */
+@media (min-width: 1920px) {
+  .projects-grid {
+    transform: scale(1.08);
+  }
+}
+
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .projects-grid {
+    transform: scale(0.97);
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1439px) {
+  .projects-grid {
+    transform: scale(0.92);
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .projects-grid {
+    transform: scale(0.86);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .projects-grid {
+    transform: scale(0.81);
+  }
+}
+
+/* Disable scaling on mobile for better performance */
+@media (max-width: 767px) {
+  .projects-grid {
+    transform: none;
+  }
+}
+
+/* Mobile touch-friendly button sizes */
+@media (max-width: 640px) {
+  /* Ensure buttons and interactive elements are at least 44x44 for touch */
+  button, a, input, select, textarea {
+    min-height: 44px;
+  }
+}
+
 /* Vertical volume slider - appears above the volume icon */
 .vol-vertical {
   writing-mode: bt-lr; /* vertical */
@@ -81,15 +134,3 @@
   background-size: 140px 140px;
 }
 
-/* Custom cursor */
-html { cursor: none; }
-.cursor-dot, .cursor-ring {
-  position: fixed;
-  pointer-events: none;
-  z-index: 50;
-  transition: transform .15s ease, background-color .2s ease, border-color .2s ease;
-}
-.cursor-dot { width: 6px; height: 6px; border-radius: 9999px; background-color: #22d3ee; }
-.cursor-ring { width: 26px; height: 26px; border-radius: 9999px; border: 1px solid rgba(34,211,238,0.6); transform: translate(-10px, -10px); }
-.cursor-accent .cursor-dot { background-color: #D0232E; }
-.cursor-accent .cursor-ring { border-color: #D0232E; }

@@ -1,0 +1,8 @@
+# Minimal gitignore - chỉ ignore những file thực sự cần thiết
+node_modules/
+.tmp/
+*.log
+*.sqlite
+*.sqlite3
+build/
+dist/

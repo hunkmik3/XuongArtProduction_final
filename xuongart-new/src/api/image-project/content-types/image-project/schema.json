@@ -1,0 +1,75 @@
+{
+  "kind": "collectionType",
+  "collectionName": "image_projects",
+  "info": {
+    "singularName": "image-project",
+    "pluralName": "image-projects",
+    "displayName": "Image Project",
+    "description": "Dự án hình ảnh riêng biệt cho trang /portfolio/images"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "categories": {
+      "type": "json"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "order": {
+      "type": "integer"
+    },
+    "media": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "orientation": {
+      "type": "enumeration",
+      "enum": [
+        "landscape",
+        "portrait"
+      ],
+      "default": "landscape"
+    },
+    "fullDescription": {
+      "type": "blocks"
+    },
+    "completionDate": {
+      "type": "date"
+    },
+    "thumbnail": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "client": {
+      "type": "string"
+    },
+    "tagline": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title"
+    }
+  }
+}

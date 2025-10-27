@@ -10,6 +10,7 @@ import logoPhobiaDark from "@/images/clients/phobia/logo-dark.svg";
 export default function Home() {
   return (
     <main className="text-black">
+      <ProjectsGallery />
       <Container className="mt-24 sm:mt-32">
         <FadeIn className="max-w-3xl">
           <h1 className="font-display text-5xl font-medium tracking-tight text-neutral-950 [text-wrap:balance] sm:text-7xl">
@@ -25,7 +26,6 @@ Chúng tôi tin rằng mỗi khung hình đều mang sức mạnh kể chuyện 
       <Clients />
       {/* Testimonials section removed by request */}
       <Services />
-      <ProjectsGallery />
       <ContactSection />
     </main>
   );
