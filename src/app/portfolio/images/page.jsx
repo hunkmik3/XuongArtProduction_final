@@ -83,6 +83,8 @@ export default function ImageProjectsPage() {
         if (response.data && response.data.length > 0) {
           const formattedProjects = response.data.map(project => formatImageProject(project));
           
+          console.log('📋 Formatted projects:', formattedProjects);
+          
           // Sort by order or id
           formattedProjects.sort((a, b) => {
             const ao = a.order || a.id;

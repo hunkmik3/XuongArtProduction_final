@@ -43,6 +43,8 @@ export const formatImageProject = (project) => {
   const mediaData = attrs.media?.data;
   const mediaList = Array.isArray(mediaData) ? mediaData : (mediaData ? [mediaData] : []);
   
+  console.log('📸 Formatting project:', project.id, 'Media data:', mediaList);
+  
   // Get all images
   const allImages = mediaList
     .filter(m => m?.attributes?.mime?.startsWith("image/"))
@@ -53,6 +55,8 @@ export const formatImageProject = (project) => {
       alt: m.attributes.alternativeText || attrs.title,
       formats: m.attributes.formats
     }));
+
+  console.log('🖼️ All images:', allImages);
 
   // Get main image (first image or thumbnail)
   const mainImage = allImages[0] || null;
