@@ -29,10 +29,12 @@ module.exports = [
   {
     name: 'strapi::cors',
     config: {
+      enabled: true,
       origin: [
         'http://localhost:3000',
         'http://127.0.0.1:3000',
         'https://xuong-art-production-final.vercel.app',
+        'https://xuong-art-production-final-git-main-hunkmikes-projects.vercel.app',
         'https://*.vercel.app',
         // 'https://xuongart.com',
         // 'https://www.xuongart.com',
