@@ -1,6 +1,16 @@
 @tailwind base;
 
 @font-face {
+  font-family: "iCiel Samsung Sharp Sans";
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+  src: url("../fonts/iCiel-Samsung-Sharp-Sans-Regular.woff2") format("woff2"),
+       url("../fonts/iCiel-Samsung-Sharp-Sans-Regular.woff") format("woff"),
+       url("../fonts/iCiel-Samsung-Sharp-Sans-Regular.ttf") format("truetype");
+}
+
+@font-face {
   font-family: "Mona Sans";
   font-weight: 200 900;
   font-display: block;

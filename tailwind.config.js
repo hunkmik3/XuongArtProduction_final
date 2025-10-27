@@ -12,11 +12,8 @@ module.exports = {
         "4xl": "2.5rem",
       },
       fontFamily: {
-        sans: ["Mona Sans", ...defaultTheme.fontFamily.sans],
-        display: [
-          ["Mona Sans", ...defaultTheme.fontFamily.sans],
-          { fontVariationSettings: '"wdth" 125' },
-        ],
+        sans: ["iCiel Samsung Sharp Sans", "Mona Sans", ...defaultTheme.fontFamily.sans],
+        display: ["iCiel Samsung Sharp Sans", "Mona Sans", ...defaultTheme.fontFamily.sans],
       },
     },
   },
