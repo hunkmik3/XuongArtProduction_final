@@ -32,8 +32,8 @@ module.exports = [
       origin: [
         'http://localhost:3000',
         'http://127.0.0.1:3000',
-        // Thêm production URLs sau khi deploy
-        // 'https://your-app.vercel.app',
+        'https://xuong-art-production-final.vercel.app',
+        'https://*.vercel.app',
         // 'https://xuongart.com',
         // 'https://www.xuongart.com',
       ],
