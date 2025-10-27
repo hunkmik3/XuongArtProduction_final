@@ -12,8 +12,8 @@ module.exports = {
         "4xl": "2.5rem",
       },
       fontFamily: {
-        sans: ["iCiel Samsung Sharp Sans", "Mona Sans", ...defaultTheme.fontFamily.sans],
-        display: ["iCiel Samsung Sharp Sans", "Mona Sans", ...defaultTheme.fontFamily.sans],
+        sans: ["Samsung Sharp Sans", "Mona Sans", ...defaultTheme.fontFamily.sans],
+        display: ["Samsung Sharp Sans", "Mona Sans", ...defaultTheme.fontFamily.sans],
       },
     },
   },
