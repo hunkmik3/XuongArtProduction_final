@@ -596,7 +596,7 @@ const ProjectsGallery = () => {
                 <>
                   {/* Mobile - show dots based on mobile slides */}
                   {mobileSlides.length > 1 && (
-                    <div className="md:hidden mt-6 flex justify-center items-center gap-2">
+                    <div className="md:hidden mt-8 flex justify-center items-center gap-1.5">
                       {mobileSlides.map((_, idx) => (
                         <button
                           key={idx}
@@ -605,8 +605,8 @@ const ProjectsGallery = () => {
                             "rounded-full transition-all duration-300 ease-out",
                             "focus:outline-none focus:ring-2 focus:ring-neutral-900/50",
                             idx === mobileSlide 
-                              ? "w-6 h-2 bg-neutral-900" 
-                              : "w-2 h-2 bg-neutral-900/30 hover:bg-neutral-900/50"
+                              ? "w-5 h-1.5 bg-neutral-900" 
+                              : "w-1.5 h-1.5 bg-neutral-900/30 hover:bg-neutral-900/50"
                           )}
                           aria-label={`Trang ${idx + 1}`}
                         />
@@ -616,7 +616,7 @@ const ProjectsGallery = () => {
                   
                   {/* Desktop - show dots based on desktop slides */}
                   {slides.length > 1 && (
-                    <div className="hidden md:flex mt-6 sm:mt-8 justify-center items-center gap-2 sm:gap-3">
+                    <div className="hidden md:flex mt-8 sm:mt-10 justify-center items-center gap-3">
                       {slides.map((_, idx) => (
                         <button
                           key={idx}
