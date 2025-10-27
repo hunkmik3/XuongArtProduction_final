@@ -92,59 +92,9 @@ export default function ImageProjectsPage() {
           
           setProjects(formattedProjects);
         } else {
-          // Fallback sample data for testing
-          console.log('No data from API, using sample data...');
-          const sampleProjects = [
-            {
-              id: 1,
-              title: "Photography Series - Urban Life",
-              client: "City Magazine",
-              category: "Photography",
-              categories: ["Photography", "Street Art", "Urban"],
-              description: "A collection of street photography capturing the essence of urban life in modern cities.",
-              media: "/images/samsung.jpg",
-              allImages: [
-                { url: "/images/samsung.jpg", alt: "Urban street scene", width: 1200, height: 800 },
-                { url: "/images/meeting.jpg", alt: "City architecture", width: 1200, height: 600 },
-                { url: "/images/whiteboard.jpg", alt: "Urban landscape", width: 1200, height: 900 }
-              ],
-              completionDate: "2024-01-15",
-              order: 1
-            },
-            {
-              id: 2,
-              title: "Brand Identity Design",
-              client: "Tech Startup",
-              category: "Graphic Design",
-              categories: ["Graphic Design", "Branding", "Logo Design"],
-              description: "Complete brand identity design including logo, business cards, and marketing materials.",
-              media: "/images/laptop.jpg",
-              allImages: [
-                { url: "/images/laptop.jpg", alt: "Brand logo design", width: 1200, height: 800 },
-                { url: "/images/meeting.jpg", alt: "Business card design", width: 1200, height: 600 }
-              ],
-              completionDate: "2024-02-20",
-              order: 2
-            },
-            {
-              id: 3,
-              title: "Digital Art Collection",
-              client: "Art Gallery",
-              category: "Digital Art",
-              categories: ["Digital Art", "Illustration", "Concept Art"],
-              description: "A series of digital artworks exploring themes of nature and technology.",
-              media: "/images/whiteboard.jpg",
-              allImages: [
-                { url: "/images/whiteboard.jpg", alt: "Digital artwork 1", width: 1200, height: 900 },
-                { url: "/images/samsung.jpg", alt: "Digital artwork 2", width: 1200, height: 800 },
-                { url: "/images/laptop.jpg", alt: "Digital artwork 3", width: 1200, height: 600 },
-                { url: "/images/meeting.jpg", alt: "Digital artwork 4", width: 1200, height: 700 }
-              ],
-              completionDate: "2024-03-10",
-              order: 3
-            }
-          ];
-          setProjects(sampleProjects);
+          // No data from API
+          console.log('No data from API');
+          setProjects([]);
         }
       } catch (error) {
         console.error('Error fetching image projects:', error);
