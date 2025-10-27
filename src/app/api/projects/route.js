@@ -4,20 +4,20 @@ const STRAPI_API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localho
 
 export async function GET(request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const projectType = searchParams.get('type'); // 'featured' or 'general'
+    const requestUrl = new URL(request.url);
+    const projectType = requestUrl.searchParams.get('type'); // 'featured' or 'general'
     
-    let url = `${STRAPI_API_URL}/api/projects?populate=*`;
+    let strapiUrl = `${STRAPI_API_URL}/api/projects?populate=*`;
     
     // Filter by project type if specified
     if (projectType) {
-      url += `&filters[projectType][$eq]=${projectType}`;
+      strapiUrl += `&filters[projectType][$eq]=${projectType}`;
     }
     
     // Sort by order field
-    url += '&sort=order:asc';
+    strapiUrl += '&sort=order:asc';
 
-    const response = await fetch(url, {
+    const response = await fetch(strapiUrl, {
       headers: {
         'Content-Type': 'application/json',
       },
