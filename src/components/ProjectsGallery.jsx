@@ -719,10 +719,20 @@ const ProjectsGallery = () => {
               className="relative w-[88vw] h-[85vh] lg:h-[82vh] bg-neutral-950 rounded-2xl border border-white/10 overflow-hidden flex flex-col lg:flex-row"
               onClick={(e) => e.stopPropagation()}
             >
+              {/* Mobile top bar (black) with close button */}
+              <div className="sm:hidden sticky top-0 z-20 bg-black/90 text-white px-4 py-3 flex justify-end">
+                <button
+                  onClick={closeProject}
+                  className="p-2 rounded-full hover:bg-white/10 focus:outline-none"
+                  aria-label="Đóng"
+                >
+                  ✕
+                </button>
+              </div>
               {/* Close */}
               <button
                 onClick={closeProject}
-                className="absolute top-3 sm:top-4 right-3 sm:right-4 z-10 h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-white/20 border border-white/30 text-white hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white/50"
+                className="hidden sm:flex absolute top-3 sm:top-4 right-3 sm:right-4 z-10 h-10 w-10 items-center justify-center rounded-full bg-white/20 border border-white/30 text-white hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white/50"
                 aria-label="Đóng"
               >
                 ✕
