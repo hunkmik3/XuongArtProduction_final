@@ -225,7 +225,7 @@ const FeaturedCard = ({ areaName, slotShape, item, onOpen, index = 0, fillHeight
               src={item.media}
               className="h-full w-full"
               style={{
-                objectFit: 'contain',
+                objectFit: fillHeight ? 'cover' : 'contain',
                 objectPosition: 'center center',
                 width: '100%',
                 height: '100%',
@@ -257,7 +257,7 @@ const FeaturedCard = ({ areaName, slotShape, item, onOpen, index = 0, fillHeight
             alt={item.title}
             fill
             sizes="(max-width: 640px) 90vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover"
+            className={fillHeight ? "object-cover" : "object-cover"}
             loading="lazy"
             onLoad={handleImageLoad}
           />
