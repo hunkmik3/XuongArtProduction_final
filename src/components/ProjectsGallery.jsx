@@ -661,17 +661,17 @@ const ProjectsGallery = () => {
                       <>
                         {a && (
                           <div className="col-span-2">
-                            <FeaturedCard item={a} onOpen={openProject} index={0} forceAspectRatio={9/16} />
+                            <FeaturedCard item={a} onOpen={openProject} index={0} forceAspectRatio={9/14} />
                           </div>
                         )}
                         {b && (
                           <div>
-                            <FeaturedCard item={b} onOpen={openProject} index={1} forceAspectRatio={16/9} />
+                            <FeaturedCard item={b} onOpen={openProject} index={1} forceAspectRatio={16/10} />
                           </div>
                         )}
                         {c && (
                           <div>
-                            <FeaturedCard item={c} onOpen={openProject} index={2} forceAspectRatio={16/9} />
+                            <FeaturedCard item={c} onOpen={openProject} index={2} forceAspectRatio={16/10} />
                           </div>
                         )}
                       </>
