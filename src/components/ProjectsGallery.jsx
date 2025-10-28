@@ -438,12 +438,12 @@ const ProjectsGallery = () => {
     }).filter(slide => slide.length > 0);
   }, [allItems]);
 
-  // Auto play every 8s (only when there is at least one slide)
-  useEffect(() => {
-    if (!slides.length) return; // avoid modulo by zero
-    const id = setInterval(() => setSlide((s) => (s + 1) % slides.length), 8000);
-    return () => clearInterval(id);
-  }, [slides.length]);
+  // Auto play every 8s (DISABLED)
+  // useEffect(() => {
+  //   if (!slides.length) return; // avoid modulo by zero
+  //   const id = setInterval(() => setSlide((s) => (s + 1) % slides.length), 8000);
+  //   return () => clearInterval(id);
+  // }, [slides.length]);
 
 
   // Show loading state
