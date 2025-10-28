@@ -10,16 +10,16 @@ import Image from "next/image";
 import { FiSearch } from "react-icons/fi";
 
 // Pattern bất đối xứng 3 cột mô phỏng layout tham chiếu (lặp tuần tự)
-// Mỗi slot xác định cột và số hàng (row span) để tạo tile to/nhỏ khác nhau
+// Mỗi slot xác định cột, số hàng (row span) và orientation mong muốn để gán item phù hợp
 // Giá trị row tương thích với gridAutoRows=8px (row span 32 ~ 256px + gaps)
 const MASONRY_PATTERN = [
-  { col: 1, row: 32 }, // cao (portrait)
-  { col: 2, row: 18 }, // nhỏ
-  { col: 3, row: 18 }, // nhỏ
-  { col: 2, row: 26 }, // trung bình (landscape)
-  { col: 3, row: 32 }, // cao (portrait)
-  { col: 1, row: 18 }, // nhỏ
-  { col: 2, row: 18 }, // nhỏ
+  { col: 1, row: 32, desired: 'portrait' },
+  { col: 2, row: 18, desired: 'landscape' },
+  { col: 3, row: 18, desired: 'landscape' },
+  { col: 2, row: 26, desired: 'landscape' },
+  { col: 3, row: 32, desired: 'portrait' },
+  { col: 1, row: 18, desired: 'landscape' },
+  { col: 2, row: 18, desired: 'landscape' },
 ];
 
 // Component cho từng project card với masonry layout
@@ -502,6 +502,55 @@ export default function PortfolioPage() {
     return items;
   }, [filtered, page, pageSize]);
 
+  // Chuẩn hóa orientation từ Strapi / kích thước để sắp xếp vào slot mong muốn
+  const normalizeOrientation = (val) => {
+    if (val === undefined || val === null) return undefined;
+    const s = String(val).trim().toLowerCase();
+    if (["portrait", "doc", "dọc", "vertical", "v", "p"].includes(s)) return "portrait";
+    if (["landscape", "ngang", "horizontal", "h", "l"].includes(s)) return "landscape";
+    return undefined;
+  };
+
+  // Sắp xếp lại item theo orientation cho khớp với pattern (không đổi kích thước/spans)
+  const orderedPageItems = useMemo(() => {
+    const items = [...pageItems];
+    if (!items.length) return items;
+
+    const getItemOrientation = (it) => {
+      const o1 = normalizeOrientation(it.orientationField || it.orientation);
+      if (o1) return o1;
+      const w = it.width || it.thumbWidth;
+      const h = it.height || it.thumbHeight;
+      if (w && h) return h > w ? 'portrait' : 'landscape';
+      return 'portrait';
+    };
+
+    // Hàng đợi theo orientation, giữ thứ tự hiện có
+    const portraits = items.filter((it) => getItemOrientation(it) === 'portrait');
+    const landscapes = items.filter((it) => getItemOrientation(it) === 'landscape');
+    const fallback = items.filter((it) => !portraits.includes(it) && !landscapes.includes(it));
+
+    const take = (arr) => arr.length ? arr.shift() : undefined;
+
+    const result = [];
+    for (let i = 0; i < items.length; i++) {
+      const slot = MASONRY_PATTERN[i % MASONRY_PATTERN.length];
+      let picked;
+      if (slot.desired === 'portrait') {
+        picked = take(portraits) || take(landscapes) || take(fallback);
+      } else if (slot.desired === 'landscape') {
+        picked = take(landscapes) || take(portraits) || take(fallback);
+      } else {
+        picked = take(landscapes) || take(portraits) || take(fallback);
+      }
+      if (picked) result.push(picked);
+    }
+
+    // Nếu còn thừa, nối vào cuối (không phá bố cục index trước)
+    const remaining = [...portraits, ...landscapes, ...fallback];
+    return result.concat(remaining);
+  }, [pageItems]);
+
   // Get unique categories from projects
   const categories = useMemo(() => {
     const allCategories = new Set();
@@ -637,7 +686,7 @@ export default function PortfolioPage() {
               animate="visible"
               variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}
             >
-              {pageItems.map((item, i) => (
+              {orderedPageItems.map((item, i) => (
                 <MasonryCard
                   key={item.id}
                   item={item}
