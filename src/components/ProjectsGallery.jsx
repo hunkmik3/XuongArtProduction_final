@@ -104,7 +104,7 @@ const assignToPattern = (items, pattern, orientationMap = {}) => {
 };
 
 // Individual project card component
-const FeaturedCard = ({ areaName, slotShape, item, onOpen, index = 0, fillHeight = false }) => {
+const FeaturedCard = ({ areaName, slotShape, item, onOpen, index = 0, fillHeight = false, forceAspectRatio }) => {
   const ref = useRef(null);
   const videoRef = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-10%" });
@@ -208,7 +208,7 @@ const FeaturedCard = ({ areaName, slotShape, item, onOpen, index = 0, fillHeight
         ...(areaName ? { gridArea: areaName } : {}),
         width: '100%',
         height: fillHeight ? '100%' : 'auto',
-        ...(fillHeight ? {} : { aspectRatio: videoAspectRatio || 16/9 })
+        ...(fillHeight ? {} : { aspectRatio: forceAspectRatio || videoAspectRatio || 16/9 })
       }}
       whileHover={{ 
         scale: 1.03,
@@ -643,8 +643,8 @@ const ProjectsGallery = () => {
                 <div
                   className="grid grid-cols-2 grid-rows-2 gap-3 px-4 lg:hidden"
                   style={{
-                    height: '70vh',
-                    gridTemplateColumns: '0.95fr 1.05fr',
+                    height: '72vh',
+                    gridTemplateColumns: '0.9fr 1.1fr',
                     gridTemplateRows: '1fr 1fr'
                   }}
                 >
@@ -658,17 +658,17 @@ const ProjectsGallery = () => {
                       <>
                         {a && (
                           <div className="row-span-2">
-                            <FeaturedCard item={a} onOpen={openProject} index={0} fillHeight />
+                            <FeaturedCard item={a} onOpen={openProject} index={0} fillHeight forceAspectRatio={9/16} />
                           </div>
                         )}
                         {b && (
                           <div className="">
-                            <FeaturedCard item={b} onOpen={openProject} index={1} fillHeight />
+                            <FeaturedCard item={b} onOpen={openProject} index={1} fillHeight forceAspectRatio={16/9} />
                           </div>
                         )}
                         {c && (
                           <div className="">
-                            <FeaturedCard item={c} onOpen={openProject} index={2} fillHeight />
+                            <FeaturedCard item={c} onOpen={openProject} index={2} fillHeight forceAspectRatio={16/9} />
                           </div>
                         )}
                       </>
