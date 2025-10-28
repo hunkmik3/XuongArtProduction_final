@@ -592,7 +592,7 @@ const ProjectsGallery = () => {
   return (
     <>
       <section
-        className="relative py-0"
+        className="relative py-0 sm:pt-6"
         style={{ 
           left: "50%", 
           transform: "translateX(-50%)", 
