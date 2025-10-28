@@ -14,6 +14,15 @@ import { getFeaturedProjects } from "@/lib/strapi";
 const isVideoUrl = (url) => /(mp4|webm|ogg|mov|avi)$/i.test(url || "");
 const isImageUrl = (url) => /(jpg|jpeg|png|webp|gif|svg)$/i.test(url || "");
 
+// Normalize Strapi orientation values (handle casing/whitespace/localization)
+const normalizeOrientation = (val) => {
+  if (val === undefined || val === null) return undefined;
+  const s = String(val).trim().toLowerCase();
+  if (["portrait", "doc", "dọc", "vertical", "v", "p"].includes(s)) return "portrait";
+  if (["landscape", "ngang", "horizontal", "h", "l"].includes(s)) return "landscape";
+  return undefined;
+};
+
 // Convert Strapi Rich Text (Blocks) or unknown objects to plain text
 const blocksToPlainText = (value) => {
   if (typeof value === 'string') return value;
@@ -393,7 +402,7 @@ const ProjectsGallery = () => {
             const mediaAttr = project.attributes?.media?.data?.attributes;
             const mediaW = mediaAttr?.width;
             const mediaH = mediaAttr?.height;
-            const orientation = project.attributes?.orientation
+            const orientation = normalizeOrientation(project.attributes?.orientation)
               || (mediaW && mediaH ? (mediaH > mediaW ? 'portrait' : 'landscape') : undefined);
             
             return {
@@ -474,8 +483,8 @@ const ProjectsGallery = () => {
   
   // Build mobile-specific slides (2x2): ignore order; group by orientation from Strapi
   const mobileSlides = useMemo(() => {
-    const portraits = allItems.filter((it) => it?.orientation === 'portrait' || (it?.medias?.[0]?.height > it?.medias?.[0]?.width));
-    const landscapes = allItems.filter((it) => it?.orientation === 'landscape' || (it?.medias?.[0]?.width >= it?.medias?.[0]?.height));
+    const portraits = allItems.filter((it) => normalizeOrientation(it?.orientation) === 'portrait' || (!it?.orientation && (it?.medias?.[0]?.height > it?.medias?.[0]?.width)));
+    const landscapes = allItems.filter((it) => normalizeOrientation(it?.orientation) === 'landscape' || (!it?.orientation && (it?.medias?.[0]?.width >= it?.medias?.[0]?.height)));
     const used = new Set();
     const takeNext = (arr) => {
       while (arr.length && used.has(arr[0]?.id)) arr.shift();
