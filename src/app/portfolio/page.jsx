@@ -177,8 +177,7 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
     if (isMobile) {
       return { aspectRatio: aspectRatioValue };
     }
-    // Desktop/tablet: cap max height to avoid overly large tiles
-    return { minHeight: '240px', maxHeight: '520px' };
+    return { minHeight: '240px' };
   }, [isMobile, aspectRatioValue]);
 
   return (
@@ -618,23 +617,25 @@ export default function PortfolioPage() {
           <AnimatePresence mode="popLayout">
             <motion.div
               layout
-              className="mt-10 columns-1 sm:columns-3 gap-0 [column-fill:balance]"
+              className="mt-10 grid gap-1 sm:gap-2 grid-cols-1 sm:grid-cols-3 lg:grid-cols-3"
               style={{
+                gridAutoRows: 'minmax(240px, auto)',
+                gridAutoFlow: 'dense',
                 maxWidth: '1400px',
-                margin: '0 auto'
+                margin: '0 auto',
+                alignItems: 'stretch'
               }}
               initial="hidden"
               animate="visible"
-              variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.04 } } }}
+              variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}
             >
               {pageItems.map((item, i) => (
-                <div key={item.id} className="mb-2 sm:mb-3 break-inside-avoid">
-                  <MasonryCard
-                    item={item}
-                    onOpen={openProject}
-                    index={i}
-                  />
-                </div>
+                <MasonryCard
+                  key={item.id}
+                  item={item}
+                  onOpen={openProject}
+                  index={i}
+                />
               ))}
             </motion.div>
           </AnimatePresence>
