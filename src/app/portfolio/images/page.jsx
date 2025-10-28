@@ -481,7 +481,7 @@ export default function ImageProjectsPage() {
                               alt={img.alt}
                               width={img.width || 1200}
                               height={img.height || 800}
-                              className="w-full h-auto object-contain max-h-[70vh]"
+                              className="w-full h-auto object-contain"
                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 60vw"
                             />
                           </div>
@@ -495,7 +495,7 @@ export default function ImageProjectsPage() {
                         alt={selected.title || "Project"}
                         width={1200}
                         height={800}
-                        className="w-full h-auto object-contain max-h-[70vh]"
+                        className="w-full h-auto object-contain"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 60vw"
                       />
                     </div>
