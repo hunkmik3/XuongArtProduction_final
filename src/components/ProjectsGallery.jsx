@@ -464,7 +464,7 @@ const ProjectsGallery = () => {
   // Build slides based on available items
   // Mobile: 4 items per page, Desktop: 6 items per page
   const itemsPerSlide = 6; // Desktop/Tablet
-  const itemsPerSlideMobile = 3; // Mobile only (1 portrait left + 2 landscape right)
+  const itemsPerSlideMobile = 5; // Mobile only (pages: 1P+4L) or last page 2P
   
   const slides = useMemo(() => {
     const totalItems = allItems.length;
@@ -481,7 +481,9 @@ const ProjectsGallery = () => {
     }).filter(slide => slide.length > 0);
   }, [allItems]);
   
-  // Build mobile-specific slides (1P + 2L): ignore order; group by orientation from Strapi
+  // Build mobile-specific slides:
+  //  - Page 1-2: 1 portrait + 4 landscapes (1P+4L)
+  //  - Last page: 2 portraits side-by-side (2P)
   const mobileSlides = useMemo(() => {
     const portraits = allItems.filter((it) => normalizeOrientation(it?.orientation) === 'portrait' || (!it?.orientation && (it?.medias?.[0]?.height > it?.medias?.[0]?.width)));
     const landscapes = allItems.filter((it) => normalizeOrientation(it?.orientation) === 'landscape' || (!it?.orientation && (it?.medias?.[0]?.width >= it?.medias?.[0]?.height)));
@@ -493,26 +495,24 @@ const ProjectsGallery = () => {
       return v;
     };
     const slidesArr = [];
-    for (let p = 0; p < 4; p++) {
+    // First two pages: 1P + 4L
+    for (let p = 0; p < 2; p++) {
       const page = [];
-      const pr = takeNext(portraits);
-      if (pr) page.push(pr);
-      const l1 = takeNext(landscapes);
-      if (l1) page.push(l1);
-      const l2 = takeNext(landscapes);
-      if (l2) page.push(l2);
-      // Fallback fill if < 3
-      if (page.length < 3) {
-        const rest = allItems.filter((it) => !used.has(it.id));
-        for (const r of rest) {
-          page.push(r);
-          used.add(r.id);
-          if (page.length === 3) break;
-        }
+      const pr = takeNext(portraits); if (pr) page.push(pr);
+      for (let i = 0; i < 4; i++) {
+        const l = takeNext(landscapes); if (l) page.push(l);
       }
       if (page.length) slidesArr.push(page);
       if (allItems.filter((it) => !used.has(it.id)).length === 0) break;
     }
+    // Last page: 2P side-by-side (fill with remaining if thiếu)
+    const last = [];
+    for (let i = 0; i < 2; i++) { const pr = takeNext(portraits); if (pr) last.push(pr); }
+    if (last.length < 2) {
+      const rest = allItems.filter((it) => !used.has(it.id));
+      for (const r of rest) { last.push(r); if (last.length === 2) break; }
+    }
+    if (last.length) slidesArr.push(last);
     return slidesArr;
   }, [allItems]);
 
@@ -668,31 +668,57 @@ const ProjectsGallery = () => {
                   {console.log('🔧 After assignToPattern:', assignToPattern(slides[slide], SLIDE_PATTERNS[slide % SLIDE_PATTERNS.length]))}
                 </div>
 
-                {/* Mobile grid: 1 portrait (left, tall) + 2 landscapes (right stacked) */}
-                <div className="grid grid-cols-2 grid-rows-2 gap-3 px-4 lg:hidden">
+                {/* Mobile grids: pages 0-1 use 1P+4L, last page shows 2P */}
+                <div className="px-4 lg:hidden">
                   {(() => {
                     const items = mobileSlides[mobileSlide] || [];
-                    const a = items[0];
-                    const b = items[1];
-                    const c = items[2];
+                    if (mobileSlide <= 1 && items.length >= 3) {
+                      const a = items[0];
+                      const b = items[1];
+                      const c = items[2];
+                      const d = items[3];
+                      const e = items[4];
+                      return (
+                        <div className="grid grid-cols-2 grid-rows-3 gap-3">
+                          {a && (
+                            <div className="row-span-2">
+                              <FeaturedCard item={a} onOpen={openProject} index={0} fillHeight forceAspectRatio={9/16} />
+                            </div>
+                          )}
+                          {b && (
+                            <div>
+                              <FeaturedCard item={b} onOpen={openProject} index={1} fillHeight forceAspectRatio={16/9} />
+                            </div>
+                          )}
+                          {c && (
+                            <div>
+                              <FeaturedCard item={c} onOpen={openProject} index={2} fillHeight forceAspectRatio={16/9} />
+                            </div>
+                          )}
+                          <div className="col-span-2 grid grid-cols-2 gap-3">
+                            {d && (
+                              <div>
+                                <FeaturedCard item={d} onOpen={openProject} index={3} fillHeight forceAspectRatio={16/9} />
+                              </div>
+                            )}
+                            {e && (
+                              <div>
+                                <FeaturedCard item={e} onOpen={openProject} index={4} fillHeight forceAspectRatio={16/9} />
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    }
+                    // Last page: 2 portraits side-by-side
                     return (
-                      <>
-                        {a && (
-                          <div className="row-span-2">
-                            <FeaturedCard item={a} onOpen={openProject} index={0} fillHeight forceAspectRatio={9/16} />
+                      <div className="grid grid-cols-2 gap-3">
+                        {items.map((it, i) => (
+                          <div key={i}>
+                            <FeaturedCard item={it} onOpen={openProject} index={i} fillHeight forceAspectRatio={9/16} />
                           </div>
-                        )}
-                        {b && (
-                          <div>
-                            <FeaturedCard item={b} onOpen={openProject} index={1} fillHeight forceAspectRatio={16/9} />
-                          </div>
-                        )}
-                        {c && (
-                          <div>
-                            <FeaturedCard item={c} onOpen={openProject} index={2} fillHeight forceAspectRatio={16/9} />
-                          </div>
-                        )}
-                      </>
+                        ))}
+                      </div>
                     );
                   })()}
                 </div>
