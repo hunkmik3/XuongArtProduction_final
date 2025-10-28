@@ -709,6 +709,19 @@ export default function PortfolioPage() {
                       onContextMenu={(e) => e.preventDefault()}
                       autoPlay
                       playsInline
+                      onClick={(e) => {
+                        // Toggle play/pause on desktop
+                        try {
+                          if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+                            const v = e.currentTarget;
+                            if (v.paused) {
+                              v.play();
+                            } else {
+                              v.pause();
+                            }
+                          }
+                        } catch {}
+                      }}
                     />
                   ) : selected.media ? (
                     <Image
