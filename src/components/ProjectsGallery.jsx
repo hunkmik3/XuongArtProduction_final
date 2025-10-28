@@ -282,17 +282,17 @@ const FeaturedCard = ({ areaName, slotShape, item, onOpen, index = 0, fillHeight
       
       {/* Play button overlay removed */}
       
-      {/* Title overlay with improved styling */}
+      {/* Title overlay with improved styling (mobile: only show title) */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-2 transition-transform duration-300 group-hover:translate-y-0">
-          <div className="text-xs uppercase tracking-widest text-neutral-300 font-medium">{item.client}</div>
+          <div className="hidden sm:block text-xs uppercase tracking-widest text-neutral-300 font-medium">{item.client}</div>
           <div className="mt-2 line-clamp-2 font-display text-xl font-bold text-white leading-tight">{item.title}</div>
           {item.tagline && (
-            <div className="mt-3 text-sm text-neutral-200 line-clamp-2 leading-relaxed">{item.tagline}</div>
+            <div className="hidden sm:block mt-3 text-sm text-neutral-200 line-clamp-2 leading-relaxed">{item.tagline}</div>
           )}
           {/* Category badges (multi-support) */}
           {Array.isArray(item.categories) && item.categories.length > 0 ? (
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className="hidden sm:flex mt-3 flex-wrap gap-2">
               {item.categories.map((cat, idx) => (
                 <div key={idx} className="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium text-white border border-white/30">
                   {cat}
@@ -301,7 +301,7 @@ const FeaturedCard = ({ areaName, slotShape, item, onOpen, index = 0, fillHeight
             </div>
           ) : (
             item.category && (
-              <div className="mt-3 inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium text-white border border-white/30">
+              <div className="hidden sm:inline-block mt-3 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium text-white border border-white/30">
                 {item.category}
               </div>
             )
