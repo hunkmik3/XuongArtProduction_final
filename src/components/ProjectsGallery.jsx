@@ -598,7 +598,7 @@ const ProjectsGallery = () => {
           transform: "translateX(-50%)", 
           width: "100vw", 
           position: "relative",
-          paddingTop: "22px",
+          paddingTop: "0px", // remove top spacing on mobile
           paddingBottom: "0px",
           marginTop: "0px",
           minHeight: "80vh", // Đảm bảo chiều cao tối thiểu
