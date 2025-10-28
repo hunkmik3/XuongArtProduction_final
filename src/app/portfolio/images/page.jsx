@@ -71,7 +71,6 @@ export default function ImageProjectsPage() {
   const [loading, setLoading] = useState(true);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [showInfo, setShowInfo] = useState(false);
 
   // Fetch image projects from dedicated API
   useEffect(() => {
@@ -129,16 +128,7 @@ export default function ImageProjectsPage() {
     }, 200);
   };
 
-  // Ensure details are always visible on desktop, collapsible on mobile
-  useEffect(() => {
-    const onResize = () => {
-      if (typeof window === 'undefined') return;
-      setShowInfo(window.innerWidth >= 640); // sm breakpoint and up
-    };
-    onResize();
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
+  
 
   const nextImage = () => {
     if (selected && selected.allImages) {
@@ -379,19 +369,8 @@ export default function ImageProjectsPage() {
                 className="w-[98vw] max-w-7xl h-[85vh] sm:h-[85vh] bg-white rounded-2xl shadow-2xl overflow-hidden pointer-events-auto mt-8 sm:mt-0"
                 onClick={(e) => e.stopPropagation()}
               >
-              {/* Mobile top bar (black) only: keeps X separate from media */}
-              <div className="sm:hidden sticky top-0 z-20 bg-black text-white px-4 py-3 flex justify-end">
-                <button
-                  onClick={closeProject}
-                  className="p-2 rounded-full hover:bg-white/10 transition-colors"
-                  aria-label="Đóng"
-                >
-                  <FiX className="w-6 h-6" />
-                </button>
-              </div>
-
-              {/* Header (desktop and up) */}
-              <div className="hidden sm:block sticky top-0 z-20 bg-white border-b border-gray-200 px-6 py-4">
+              {/* Header */}
+              <div className="sticky top-0 z-20 bg-white border-b border-gray-200 px-6 py-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <AuthorAvatar size="xs" textColor="text-gray-600" />
@@ -417,20 +396,9 @@ export default function ImageProjectsPage() {
               </div>
 
               {/* Scrollable content */}
-              <div className="h-[calc(100%-56px)] sm:h-[calc(100%-80px)] overflow-y-auto">
+              <div className="h-[calc(100%-80px)] overflow-y-auto">
                 <div className="max-w-5xl mx-auto px-6 py-6">
-                  {/* Mobile toggle for details */}
-                  <div className="sm:hidden mb-4">
-                    <button
-                      onClick={() => setShowInfo(v => !v)}
-                      className="inline-flex items-center rounded-full bg-gray-900 text-white px-4 py-2 text-sm"
-                    >
-                      {showInfo ? 'Ẩn chi tiết' : 'Xem chi tiết'}
-                    </button>
-                  </div>
-
-                  {/* Project info - collapsible on mobile */}
-                  {(showInfo || typeof window === 'undefined') && (
+                  {/* Project info */}
                   <div className="mb-8 border-b border-gray-200 pb-6">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                       {/* Main info */}
@@ -494,7 +462,6 @@ export default function ImageProjectsPage() {
                       </div>
                     </div>
                   </div>
-                  )}
 
                   {/* Images grid */}
                   {selected.allImages && selected.allImages.length > 0 ? (
