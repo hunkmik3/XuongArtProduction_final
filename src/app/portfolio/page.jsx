@@ -12,12 +12,12 @@ import { FiSearch } from "react-icons/fi";
 // Pattern cho masonry 3 cột (lặp tuần tự)
 // type: 'p' cho slot portrait cao, 'l' cho slot landscape thấp
 const MASONRY_PATTERN = [
-  { col: 1, rowSpan: 28, type: 'p' }, // cột 1 cao
-  { col: 2, rowSpan: 16, type: 'l' }, // hai block ngang nhỏ
-  { col: 3, rowSpan: 16, type: 'l' },
-  { col: 2, rowSpan: 28, type: 'p' }, // cột 2 cao
-  { col: 1, rowSpan: 16, type: 'l' },
-  { col: 3, rowSpan: 28, type: 'p' }, // cột 3 cao
+  { col: 1, type: 'p' },
+  { col: 2, type: 'l' },
+  { col: 3, type: 'l' },
+  { col: 2, type: 'p' },
+  { col: 1, type: 'l' },
+  { col: 3, type: 'p' },
 ];
 
 // Component cho từng project card với masonry layout
@@ -153,21 +153,28 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
 
   // Xếp theo pattern cố định dựa vào index (không phụ thuộc tải media)
   const slot = useMemo(() => MASONRY_PATTERN[index % MASONRY_PATTERN.length], [index]);
-  const gridStyle = useMemo(() => {
-    // Nếu orientation khác type slot, tinh chỉnh span nhẹ để hài hoà
-    let span = slot.rowSpan;
-    if (slot.type === 'p' && orientation !== 'portrait') span = Math.max(20, span - 6);
-    if (slot.type === 'l' && orientation !== 'landscape') span = span + 6;
-    return {
-      gridColumn: `${slot.col} / span 1`,
-      gridRowEnd: `span ${span}`,
-    };
-  }, [slot, orientation]);
+  const gridStyle = useMemo(() => ({ gridColumn: `${slot.col} / span 1` }), [slot]);
 
-  // Không cần tính span động nữa vì dùng pattern cố định
+  // Tính span động theo chiều cao thực tế để khít, tránh chồng chéo
+  const containerRef = useRef(null);
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const compute = () => {
+      const rowHeight = 8; // khớp gridAutoRows
+      const gap = 8; // khớp gap 2 (0.5rem = 8px)
+      const height = el.getBoundingClientRect().height;
+      const span = Math.ceil((height + gap) / (rowHeight + gap));
+      el.style.gridRowEnd = `span ${span}`;
+    };
+    compute();
+    window.addEventListener('resize', compute);
+    return () => window.removeEventListener('resize', compute);
+  }, [aspectRatioValue, orientation, isMobile]);
 
   return (
     <motion.div
+      ref={containerRef}
       layout
       className={`relative group overflow-hidden rounded-2xl bg-neutral-900 text-white shadow-lg cursor-pointer ${gridSpanClasses}`}
       whileHover={{ scale: 1.02 }}
