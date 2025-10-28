@@ -148,15 +148,13 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
     return 16/9;
   }, [orientation, item.thumbWidth, item.thumbHeight, item.width, item.height]);
 
-  // Style: chuẩn hóa các dự án ngang có tỉ lệ 4:3 hoặc 1:1 về cùng chiều cao như landscape khác
+  // Style cho mobile vs desktop
   const cardStyle = useMemo(() => {
-    // Luôn giữ aspectRatio trên mobile để đúng tỉ lệ
-    if (isMobile) return { aspectRatio: aspectRatioValue };
-    // Trên desktop: nếu là landscape thì ép aspectRatio 16/9 để các tile ngang có chiều cao đồng bộ
-    if (orientation === 'landscape') return { aspectRatio: 16 / 9 };
-    // Portrait giữ nguyên theo pattern (chiều cao do row-span chi phối)
-    return {};
-  }, [aspectRatioValue, isMobile, orientation]);
+    // Desktop dùng row-span cố định theo pattern, không ép aspectRatio
+    if (!isMobile) return {};
+    // Mobile giữ aspectRatio để đúng tỉ lệ
+    return { aspectRatio: aspectRatioValue };
+  }, [aspectRatioValue, isMobile]);
 
   // Xếp theo pattern cố định dựa vào index (không phụ thuộc tải media)
   const slot = useMemo(() => MASONRY_PATTERN[index % MASONRY_PATTERN.length], [index]);
@@ -211,7 +209,7 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
                 alt={item.title}
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className={orientation === 'landscape' ? "object-cover" : (isMobile ? "object-contain" : "object-cover")}
+                className={isMobile ? "object-contain" : "object-cover"}
                 loading="lazy"
               />
             ) : (
@@ -219,7 +217,7 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
                 <video
                   ref={videoRef}
                   src={item.video}
-                  className={orientation === 'landscape' ? "h-full w-full object-cover" : (isMobile ? "h-full w-full object-contain" : "h-full w-full object-cover")}
+                  className={isMobile ? "h-full w-full object-contain" : "h-full w-full object-cover"}
                   muted
                   playsInline
                   controls={false}
@@ -250,7 +248,7 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
             src={item.media}
             alt={item.title || "Project"}
             fill
-            className={orientation === 'landscape' ? "object-cover" : (isMobile ? "object-contain" : "object-cover")}
+            className={isMobile ? "object-contain" : "object-cover"}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             loading="lazy"
           />
