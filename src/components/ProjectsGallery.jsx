@@ -443,18 +443,14 @@ const ProjectsGallery = () => {
     [projects]
   );
 
-  // Swap specific items by title if needed (e.g., "6" and "10")
-  const normalizedItems = useMemo(() => {
-    const items = [...allItems];
-    const idxA = items.findIndex(p => (p.title || '').trim() === '6');
-    const idxB = items.findIndex(p => (p.title || '').trim() === '10');
-    if (idxA > -1 && idxB > -1) {
-      const tmp = items[idxA];
-      items[idxA] = items[idxB];
-      items[idxB] = tmp;
-    }
-    return items;
-  }, [allItems]);
+  // Helper to check orientation reliably
+  const isPortraitItem = (it) => {
+    if (!it) return false;
+    if (it.orientation) return it.orientation === 'portrait';
+    const w = it?.medias?.[0]?.width;
+    const h = it?.medias?.[0]?.height;
+    return (w && h) ? h > w : false;
+  };
 
   // Build slides based on available items
   // Mobile: 4 items per page, Desktop: 6 items per page
@@ -476,37 +472,12 @@ const ProjectsGallery = () => {
     }).filter(slide => slide.length > 0);
   }, [allItems]);
   
-  // Build mobile-specific slides: 4 pages, each with [1 portrait (left tall), 2 landscape (right)]
+  // Build mobile-specific slides: simple chunks of 3 items (order preserved)
   const mobileSlides = useMemo(() => {
-    const portraits = normalizedItems.filter(it => (it.orientation === 'portrait' || it?.medias?.[0]?.height > it?.medias?.[0]?.width));
-    const landscapes = normalizedItems.filter(it => (it.orientation === 'landscape' || it?.medias?.[0]?.width >= it?.medias?.[0]?.height));
-    const usedIds = new Set();
-    const slidesArr = [];
-    let pIdx = 0;
-    let lIdx = 0;
-    // Helper to pull next unused from a list
-    const nextFrom = (list, startIdx) => {
-      let idx = startIdx;
-      while (idx < list.length && usedIds.has(list[idx]?.id)) idx++;
-      return [list[idx], idx + 1];
-    };
-    for (let i = 0; i < 4; i++) {
-      let slide = [];
-      let a; [a, pIdx] = nextFrom(portraits, pIdx); if (a) { slide.push(a); usedIds.add(a.id); }
-      let b; [b, lIdx] = nextFrom(landscapes, lIdx); if (b) { slide.push(b); usedIds.add(b.id); }
-      let c; [c, lIdx] = nextFrom(landscapes, lIdx); if (c) { slide.push(c); usedIds.add(c.id); }
-      // Fallback fill to ensure 3 items per slide
-      if (slide.length < 3) {
-        const rest = normalizedItems.filter(it => !usedIds.has(it.id));
-        for (const it of rest) {
-          slide.push(it); usedIds.add(it.id);
-          if (slide.length === 3) break;
-        }
-      }
-      if (slide.length) slidesArr.push(slide);
-    }
-    return slidesArr;
-  }, [normalizedItems]);
+    const arr = [...allItems];
+    const numSlides = Math.ceil(arr.length / 3);
+    return Array.from({ length: numSlides }, (_, i) => arr.slice(i * 3, (i + 1) * 3)).filter(s => s.length > 0);
+  }, [allItems]);
 
   // Auto play every 8s (DISABLED)
   // useEffect(() => {
@@ -660,33 +631,30 @@ const ProjectsGallery = () => {
                   {console.log('🔧 After assignToPattern:', assignToPattern(slides[slide], SLIDE_PATTERNS[slide % SLIDE_PATTERNS.length]))}
                 </div>
 
-                {/* Mobile grid: 3 items per page, fixed layout: left tall (2 rows), right two stacked */}
-                <div
-                  className="grid grid-cols-2 gap-3 px-4 lg:hidden"
-                >
-                  {console.log('📱 Mobile grid items:', mobileSlides[mobileSlide])}
+                {/* Mobile grid: 3 items per page, auto layout by orientation without cropping */}
+                <div className="px-4 lg:hidden space-y-3">
                   {(() => {
                     const items = mobileSlides[mobileSlide] || [];
-                    const a = items[0];
-                    const b = items[1];
-                    const c = items[2];
+                    if (!items.length) return null;
+                    // 1) Item portrait (or first item if none portrait) on top, full width, contain
+                    const portraitIdx = items.findIndex(isPortraitItem);
+                    const topIdx = portraitIdx !== -1 ? portraitIdx : 0;
+                    const top = items[topIdx];
+                    const rest = items.filter((_, i) => i !== topIdx);
                     return (
                       <>
-                        {a && (
-                          <div className="col-span-2">
-                            <FeaturedCard item={a} onOpen={openProject} index={0} forceAspectRatio={9/14} />
+                        {top && (
+                          <div className="w-full">
+                            <FeaturedCard item={top} onOpen={openProject} index={0} forceAspectRatio={9/16} />
                           </div>
                         )}
-                        {b && (
-                          <div>
-                            <FeaturedCard item={b} onOpen={openProject} index={1} forceAspectRatio={16/10} />
-                          </div>
-                        )}
-                        {c && (
-                          <div>
-                            <FeaturedCard item={c} onOpen={openProject} index={2} forceAspectRatio={16/10} />
-                          </div>
-                        )}
+                        <div className="grid grid-cols-2 gap-3">
+                          {rest.map((it, i) => (
+                            <div key={i}>
+                              <FeaturedCard item={it} onOpen={openProject} index={i+1} forceAspectRatio={16/9} />
+                            </div>
+                          ))}
+                        </div>
                       </>
                     );
                   })()}
