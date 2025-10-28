@@ -389,6 +389,13 @@ const ProjectsGallery = () => {
               ? (shortDescription.length > 160 ? shortDescription.slice(0, 160).trim() + '…' : shortDescription)
               : '';
             
+            // Orientation: prefer Strapi field, fallback to media dimensions
+            const mediaAttr = project.attributes?.media?.data?.attributes;
+            const mediaW = mediaAttr?.width;
+            const mediaH = mediaAttr?.height;
+            const orientation = project.attributes?.orientation
+              || (mediaW && mediaH ? (mediaH > mediaW ? 'portrait' : 'landscape') : undefined);
+            
             return {
               id: project.id,
               title: project.attributes?.title || 'Untitled',
@@ -404,10 +411,11 @@ const ProjectsGallery = () => {
               order: project.attributes?.order || project.id,
               media: fullMediaUrl,
               completionDate: project.attributes?.completionDate,
+              orientation,
               medias: project.attributes?.media?.data ? [{
                 url: fullMediaUrl,
-                width: project.attributes.media.data.attributes.width,
-                height: project.attributes.media.data.attributes.height
+                width: mediaW,
+                height: mediaH
               }] : []
             };
           });
