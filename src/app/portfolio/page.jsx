@@ -618,25 +618,23 @@ export default function PortfolioPage() {
           <AnimatePresence mode="popLayout">
             <motion.div
               layout
-              className="mt-10 grid gap-1 sm:gap-2 grid-cols-1 sm:grid-cols-3 lg:grid-cols-3"
+              className="mt-10 columns-1 sm:columns-3 gap-0 [column-fill:balance]"
               style={{
-                gridAutoRows: 'minmax(200px, auto)',
-                gridAutoFlow: 'dense',
                 maxWidth: '1400px',
-                margin: '0 auto',
-                alignItems: 'stretch'
+                margin: '0 auto'
               }}
               initial="hidden"
               animate="visible"
-              variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}
+              variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.04 } } }}
             >
               {pageItems.map((item, i) => (
-                <MasonryCard
-                  key={item.id}
-                  item={item}
-                  onOpen={openProject}
-                  index={i}
-                />
+                <div key={item.id} className="mb-2 sm:mb-3 break-inside-avoid">
+                  <MasonryCard
+                    item={item}
+                    onOpen={openProject}
+                    index={i}
+                  />
+                </div>
               ))}
             </motion.div>
           </AnimatePresence>
