@@ -286,6 +286,7 @@ export default function PortfolioPage() {
   const [loading, setLoading] = useState(true);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
   const [pageSize, setPageSize] = useState(20); // Default to desktop size
 
   // Detect screen size and adjust page size
@@ -405,6 +406,17 @@ export default function PortfolioPage() {
     setIsOpen(false);
     setTimeout(() => setSelected(null), 200);
   };
+
+  // Ensure details are expanded on desktop, collapsible on mobile
+  useEffect(() => {
+    const onResize = () => {
+      if (typeof window === 'undefined') return;
+      setShowInfo(window.innerWidth >= 640); // sm and up shows details by default
+    };
+    onResize();
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   // Close on ESC
   useEffect(() => {
@@ -640,9 +652,20 @@ export default function PortfolioPage() {
               className="relative w-[95vw] max-w-8xl h-[85vh] lg:h-[80vh] bg-neutral-950 rounded-2xl border border-white/10 overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
+              {/* Mobile top bar (black) with close button */}
+              <div className="sm:hidden sticky top-0 z-20 bg-black/90 text-white px-4 py-3 flex justify-end">
+                <button
+                  onClick={closeProject}
+                  className="p-2 rounded-full hover:bg-white/10 focus:outline-none"
+                  aria-label="Đóng"
+                >
+                  ✕
+                </button>
+              </div>
+              {/* Desktop floating close button */}
               <button
                 onClick={closeProject}
-                className="absolute top-3 right-3 z-10 h-10 w-10 rounded-full bg-white/20 border border-white/30 text-white hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white/50"
+                className="hidden sm:flex absolute top-3 right-3 z-10 h-10 w-10 items-center justify-center rounded-full bg-white/20 border border-white/30 text-white hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white/50"
                 aria-label="Đóng"
               >
                 ✕
@@ -680,10 +703,21 @@ export default function PortfolioPage() {
                   )}
                 </div>
                 <div className="w-full lg:w-1/3 h-1/2 lg:h-full overflow-y-auto p-4 lg:p-6 bg-neutral-900/40 border-t lg:border-t-0 lg:border-l border-white/10">
-                  {/* 1. Tên dự án */}
-                  <div className="font-display text-xl lg:text-2xl font-bold text-white leading-tight pr-8 lg:pr-16">
-                    {selected.title}
+                  {/* Mobile toggle for details */}
+                  <div className="sm:hidden mb-3">
+                    <button
+                      onClick={() => setShowInfo(v => !v)}
+                      className="inline-flex items-center rounded-full bg-white/10 text-white px-4 py-2 text-sm border border-white/20"
+                    >
+                      {showInfo ? 'Ẩn thông tin' : 'Xem thông tin'}
+                    </button>
                   </div>
+                  {(showInfo || typeof window === 'undefined') && (
+                    <>
+                      {/* 1. Tên dự án */}
+                      <div className="font-display text-xl lg:text-2xl font-bold text-white leading-tight pr-8 lg:pr-16">
+                        {selected.title}
+                      </div>
 
                   {/* 2. Thời gian hoàn thành và Thể loại cùng hàng */}
                   <div className="mt-3 lg:mt-4 flex items-center gap-2 lg:gap-4 flex-wrap">
@@ -707,30 +741,32 @@ export default function PortfolioPage() {
                     )}
                   </div>
 
-                  {/* 4. Author (không có label "Tác giả") */}
-                  <div className="mt-4 lg:mt-6">
-                    <AuthorAvatar size="md" textColor="text-white" />
-                  </div>
+                      {/* 4. Author (không có label "Tác giả") */}
+                      <div className="mt-4 lg:mt-6">
+                        <AuthorAvatar size="md" textColor="text-white" />
+                      </div>
 
-                  {/* 5. Mô tả chi tiết */}
-                  <div className="mt-4 lg:mt-6 space-y-2 lg:space-y-3 text-xs lg:text-sm text-neutral-200">
-                    {selected.description && (
-                      <div>
-                        <RichTextRenderer 
-                          content={selected.description} 
-                          className="text-neutral-200 leading-relaxed" 
-                        />
+                      {/* 5. Mô tả chi tiết */}
+                      <div className="mt-4 lg:mt-6 space-y-2 lg:space-y-3 text-xs lg:text-sm text-neutral-200">
+                        {selected.description && (
+                          <div>
+                            <RichTextRenderer 
+                              content={selected.description} 
+                              className="text-neutral-200 leading-relaxed" 
+                            />
+                          </div>
+                        )}
+                        {selected.fullDescription && (
+                          <div>
+                            <RichTextRenderer 
+                              content={selected.fullDescription} 
+                              className="text-neutral-200 leading-relaxed" 
+                            />
+                          </div>
+                        )}
                       </div>
-                    )}
-                    {selected.fullDescription && (
-                      <div>
-                        <RichTextRenderer 
-                          content={selected.fullDescription} 
-                          className="text-neutral-200 leading-relaxed" 
-                        />
-                      </div>
-                    )}
-                  </div>
+                    </>
+                  )}
                 </div>
               </div>
             </motion.div>
