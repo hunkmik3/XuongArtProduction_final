@@ -120,6 +120,14 @@ const FeaturedCard = ({ areaName, slotShape, item, onOpen, index = 0, fillHeight
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [videoScale, setVideoScale] = useState(1); // Scale tự nhiên
   const [videoAspectRatio, setVideoAspectRatio] = useState(16/9); // Aspect ratio của video
+  
+  // Ép các media vuông thành hình chữ nhật (ưu tiên 16:9)
+  const normalizeRectRatio = (ratio) => {
+    if (!ratio || !isFinite(ratio)) return 16/9;
+    // Nếu gần vuông (0.95 - 1.05) thì ép thành 16:9
+    if (ratio > 0.95 && ratio < 1.05) return 16/9;
+    return ratio;
+  };
 
   // Control video playback based on viewport visibility (tối ưu performance)
   useEffect(() => {
@@ -179,15 +187,15 @@ const FeaturedCard = ({ areaName, slotShape, item, onOpen, index = 0, fillHeight
   const handleImageLoad = (img) => {
     // Không cần orientation detection nữa vì đã cố định trong pattern
     const ratio = (img.naturalWidth || 1) / (img.naturalHeight || 1);
-    setVideoAspectRatio(ratio);
+    setVideoAspectRatio(normalizeRectRatio(ratio));
   };
 
   const handleVideoLoadedMetadata = (e) => {
     const v = e.currentTarget;
     const ratio = (v.videoWidth || 1) / (v.videoHeight || 1);
     
-    // Chỉ lưu aspect ratio, không thay đổi orientation
-    setVideoAspectRatio(ratio);
+    // Chỉ lưu aspect ratio, không thay đổi orientation (nhưng ép vuông -> chữ nhật)
+    setVideoAspectRatio(normalizeRectRatio(ratio));
     setVideoScale(1);
     
     console.log(`Video ${item.title}: ${v.videoWidth}x${v.videoHeight}, ratio: ${ratio.toFixed(2)}`);
