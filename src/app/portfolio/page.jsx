@@ -9,15 +9,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { FiSearch } from "react-icons/fi";
 
-// Pattern cho masonry 3 cột (lặp tuần tự)
-// type: 'p' cho slot portrait cao, 'l' cho slot landscape thấp
+// Pattern bất đối xứng 3 cột mô phỏng layout tham chiếu (lặp tuần tự)
+// Mỗi slot xác định cột và số hàng (row span) để tạo tile to/nhỏ khác nhau
+// Giá trị row tương thích với gridAutoRows=8px (row span 32 ~ 256px + gaps)
 const MASONRY_PATTERN = [
-  { col: 1, type: 'p' },
-  { col: 2, type: 'l' },
-  { col: 3, type: 'l' },
-  { col: 2, type: 'p' },
-  { col: 1, type: 'l' },
-  { col: 3, type: 'p' },
+  { col: 1, row: 32 }, // cao (portrait)
+  { col: 2, row: 18 }, // nhỏ
+  { col: 3, row: 18 }, // nhỏ
+  { col: 2, row: 26 }, // trung bình (landscape)
+  { col: 3, row: 32 }, // cao (portrait)
+  { col: 1, row: 18 }, // nhỏ
+  { col: 2, row: 18 }, // nhỏ
 ];
 
 // Component cho từng project card với masonry layout
@@ -148,14 +150,25 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
 
   // Style cho mobile vs desktop
   const cardStyle = useMemo(() => {
+    // Desktop dùng row-span cố định theo pattern, không ép aspectRatio
+    if (!isMobile) return {};
+    // Mobile giữ aspectRatio để đúng tỉ lệ
     return { aspectRatio: aspectRatioValue };
-  }, [aspectRatioValue]);
+  }, [aspectRatioValue, isMobile]);
 
   // Xếp theo pattern cố định dựa vào index (không phụ thuộc tải media)
   const slot = useMemo(() => MASONRY_PATTERN[index % MASONRY_PATTERN.length], [index]);
-  const gridStyle = useMemo(() => ({ gridColumn: `${slot.col} / span 1` }), [slot]);
+  const gridStyle = useMemo(() => {
+    const style = { gridColumn: `${slot.col} / span 1` };
+    if (!isMobile && slot.row) {
+      // Áp row span cố định trên desktop để tạo bố cục bất đối xứng
+      // gridAutoRows = 8px nên row 32 ~ 256px (chưa tính gap)
+      return { ...style, gridRowEnd: `span ${slot.row}` };
+    }
+    return style;
+  }, [slot, isMobile]);
 
-  // Tính span động theo chiều cao thực tế để khít, tránh chồng chéo
+  // Tính span động theo chiều cao thực tế để khít, tránh chồng chéo (chỉ dùng trên mobile)
   const containerRef = useRef(null);
   useEffect(() => {
     const el = containerRef.current;
@@ -167,9 +180,11 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
       const span = Math.ceil((height + gap) / (rowHeight + gap));
       el.style.gridRowEnd = `span ${span}`;
     };
-    compute();
-    window.addEventListener('resize', compute);
-    return () => window.removeEventListener('resize', compute);
+    if (isMobile) {
+      compute();
+      window.addEventListener('resize', compute);
+      return () => window.removeEventListener('resize', compute);
+    }
   }, [aspectRatioValue, orientation, isMobile]);
 
   return (
@@ -194,7 +209,7 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
                 alt={item.title}
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="object-contain"
+                className={isMobile ? "object-contain" : "object-cover"}
                 loading="lazy"
               />
             ) : (
@@ -202,7 +217,7 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
                 <video
                   ref={videoRef}
                   src={item.video}
-                  className="h-full w-full object-contain"
+                  className={isMobile ? "h-full w-full object-contain" : "h-full w-full object-cover"}
                   muted
                   playsInline
                   controls={false}
@@ -233,7 +248,7 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
             src={item.media}
             alt={item.title || "Project"}
             fill
-            className="object-contain"
+            className={isMobile ? "object-contain" : "object-cover"}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             loading="lazy"
           />
