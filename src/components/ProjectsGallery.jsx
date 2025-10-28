@@ -601,7 +601,7 @@ const ProjectsGallery = () => {
           paddingTop: "0px", // remove top spacing on mobile
           paddingBottom: "0px",
           marginTop: "0px",
-          minHeight: "80vh", // Đảm bảo chiều cao tối thiểu
+          minHeight: "auto",
           display: "flex",
           alignItems: "center",
           justifyContent: "center"
@@ -610,7 +610,7 @@ const ProjectsGallery = () => {
         <div className="w-full" style={{ 
           paddingTop: "0px", 
           marginTop: "0px",
-          maxWidth: "1600px", // Giới hạn chiều rộng container
+          maxWidth: "1200px",
           margin: "0 auto"
         }}>
           {/* Slider */}
