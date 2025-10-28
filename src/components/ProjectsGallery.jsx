@@ -516,12 +516,19 @@ const ProjectsGallery = () => {
     return slidesArr;
   }, [allItems]);
 
-  // Auto play every 8s (DISABLED)
-  // useEffect(() => {
-  //   if (!slides.length) return; // avoid modulo by zero
-  //   const id = setInterval(() => setSlide((s) => (s + 1) % slides.length), 8000);
-  //   return () => clearInterval(id);
-  // }, [slides.length]);
+  // Auto play every 7s with smooth transition (desktop)
+  useEffect(() => {
+    if (!slides.length) return; // avoid modulo by zero
+    const id = setInterval(() => setSlide((s) => (s + 1) % slides.length), 7000);
+    return () => clearInterval(id);
+  }, [slides.length]);
+
+  // Auto play every 7s on mobile (rotate mobileSlide)
+  useEffect(() => {
+    if (!mobileSlides.length) return;
+    const id = setInterval(() => setMobileSlide((s) => (s + 1) % mobileSlides.length), 7000);
+    return () => clearInterval(id);
+  }, [mobileSlides.length]);
 
 
   // Show loading state
@@ -764,6 +771,16 @@ const ProjectsGallery = () => {
                     </div>
                   )}
                 </>
+
+                {/* View all projects button */}
+                <div className="mt-6 sm:mt-10 flex justify-center">
+                  <Link
+                    href="/portfolio"
+                    className="inline-flex items-center rounded-full bg-neutral-950 px-6 py-3 text-white text-sm font-medium shadow hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-400 transition"
+                  >
+                    Xem tất cả dự án
+                  </Link>
+                </div>
               </motion.div>
             </AnimatePresence>
           </div>
