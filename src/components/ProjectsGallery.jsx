@@ -455,13 +455,19 @@ const ProjectsGallery = () => {
     }).filter(slide => slide.length > 0);
   }, [allItems]);
   
-  // Build mobile-specific slides (3 items per page, max 4 pages)
+  // Build mobile-specific slides: 4 pages, each with [1 portrait (left tall), 2 landscape (right)]
   const mobileSlides = useMemo(() => {
-    const capped = allItems.slice(0, itemsPerSlideMobile * 4);
-    const numSlides = 4;
-    return Array.from({ length: numSlides }, (_, i) => {
-      return capped.slice(i * itemsPerSlideMobile, (i + 1) * itemsPerSlideMobile);
-    }).filter(slide => slide.length > 0);
+    const portraits = allItems.filter(it => (it.orientation === 'portrait' || it?.medias?.[0]?.height > it?.medias?.[0]?.width));
+    const landscapes = allItems.filter(it => (it.orientation === 'landscape' || it?.medias?.[0]?.width >= it?.medias?.[0]?.height));
+    const slidesArr = [];
+    for (let i = 0; i < 4; i++) {
+      const p = portraits[i];
+      const l1 = landscapes[i * 2];
+      const l2 = landscapes[i * 2 + 1];
+      const slide = [p, l1, l2].filter(Boolean);
+      if (slide.length > 0) slidesArr.push(slide);
+    }
+    return slidesArr;
   }, [allItems]);
 
   // Auto play every 8s (DISABLED)
