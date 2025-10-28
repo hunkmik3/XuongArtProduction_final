@@ -459,13 +459,30 @@ const ProjectsGallery = () => {
   const mobileSlides = useMemo(() => {
     const portraits = allItems.filter(it => (it.orientation === 'portrait' || it?.medias?.[0]?.height > it?.medias?.[0]?.width));
     const landscapes = allItems.filter(it => (it.orientation === 'landscape' || it?.medias?.[0]?.width >= it?.medias?.[0]?.height));
+    const usedIds = new Set();
     const slidesArr = [];
+    let pIdx = 0;
+    let lIdx = 0;
+    // Helper to pull next unused from a list
+    const nextFrom = (list, startIdx) => {
+      let idx = startIdx;
+      while (idx < list.length && usedIds.has(list[idx]?.id)) idx++;
+      return [list[idx], idx + 1];
+    };
     for (let i = 0; i < 4; i++) {
-      const p = portraits[i];
-      const l1 = landscapes[i * 2];
-      const l2 = landscapes[i * 2 + 1];
-      const slide = [p, l1, l2].filter(Boolean);
-      if (slide.length > 0) slidesArr.push(slide);
+      let slide = [];
+      let a; [a, pIdx] = nextFrom(portraits, pIdx); if (a) { slide.push(a); usedIds.add(a.id); }
+      let b; [b, lIdx] = nextFrom(landscapes, lIdx); if (b) { slide.push(b); usedIds.add(b.id); }
+      let c; [c, lIdx] = nextFrom(landscapes, lIdx); if (c) { slide.push(c); usedIds.add(c.id); }
+      // Fallback fill to ensure 3 items per slide
+      if (slide.length < 3) {
+        const rest = allItems.filter(it => !usedIds.has(it.id));
+        for (const it of rest) {
+          slide.push(it); usedIds.add(it.id);
+          if (slide.length === 3) break;
+        }
+      }
+      if (slide.length) slidesArr.push(slide);
     }
     return slidesArr;
   }, [allItems]);
