@@ -443,13 +443,26 @@ const ProjectsGallery = () => {
     [projects]
   );
 
+  // Swap specific items by title if needed (e.g., "6" and "10")
+  const normalizedItems = useMemo(() => {
+    const items = [...allItems];
+    const idxA = items.findIndex(p => (p.title || '').trim() === '6');
+    const idxB = items.findIndex(p => (p.title || '').trim() === '10');
+    if (idxA > -1 && idxB > -1) {
+      const tmp = items[idxA];
+      items[idxA] = items[idxB];
+      items[idxB] = tmp;
+    }
+    return items;
+  }, [allItems]);
+
   // Build slides based on available items
   // Mobile: 4 items per page, Desktop: 6 items per page
   const itemsPerSlide = 6; // Desktop/Tablet
   const itemsPerSlideMobile = 3; // Mobile only
   
   const slides = useMemo(() => {
-    const totalItems = allItems.length;
+    const totalItems = normalizedItems.length;
     const numSlides = Math.ceil(totalItems / itemsPerSlide);
     
     console.log('📊 Building slides:', {
@@ -459,14 +472,14 @@ const ProjectsGallery = () => {
     });
     
     return Array.from({ length: numSlides }, (_, i) => {
-      return allItems.slice(i * itemsPerSlide, (i + 1) * itemsPerSlide);
+      return normalizedItems.slice(i * itemsPerSlide, (i + 1) * itemsPerSlide);
     }).filter(slide => slide.length > 0);
-  }, [allItems]);
+  }, [normalizedItems]);
   
   // Build mobile-specific slides: 4 pages, each with [1 portrait (left tall), 2 landscape (right)]
   const mobileSlides = useMemo(() => {
-    const portraits = allItems.filter(it => (it.orientation === 'portrait' || it?.medias?.[0]?.height > it?.medias?.[0]?.width));
-    const landscapes = allItems.filter(it => (it.orientation === 'landscape' || it?.medias?.[0]?.width >= it?.medias?.[0]?.height));
+    const portraits = normalizedItems.filter(it => (it.orientation === 'portrait' || it?.medias?.[0]?.height > it?.medias?.[0]?.width));
+    const landscapes = normalizedItems.filter(it => (it.orientation === 'landscape' || it?.medias?.[0]?.width >= it?.medias?.[0]?.height));
     const usedIds = new Set();
     const slidesArr = [];
     let pIdx = 0;
@@ -484,7 +497,7 @@ const ProjectsGallery = () => {
       let c; [c, lIdx] = nextFrom(landscapes, lIdx); if (c) { slide.push(c); usedIds.add(c.id); }
       // Fallback fill to ensure 3 items per slide
       if (slide.length < 3) {
-        const rest = allItems.filter(it => !usedIds.has(it.id));
+        const rest = normalizedItems.filter(it => !usedIds.has(it.id));
         for (const it of rest) {
           slide.push(it); usedIds.add(it.id);
           if (slide.length === 3) break;
@@ -493,7 +506,7 @@ const ProjectsGallery = () => {
       if (slide.length) slidesArr.push(slide);
     }
     return slidesArr;
-  }, [allItems]);
+  }, [normalizedItems]);
 
   // Auto play every 8s (DISABLED)
   // useEffect(() => {
