@@ -472,11 +472,43 @@ const ProjectsGallery = () => {
     }).filter(slide => slide.length > 0);
   }, [allItems]);
   
-  // Build mobile-specific slides: simple chunks of 4 items (order preserved)
+  // Build mobile-specific slides (2x2): ignore order; group by orientation from Strapi
   const mobileSlides = useMemo(() => {
-    const arr = [...allItems];
-    const numSlides = Math.ceil(arr.length / 4);
-    return Array.from({ length: numSlides }, (_, i) => arr.slice(i * 4, (i + 1) * 4)).filter(s => s.length > 0);
+    const portraits = allItems.filter((it) => it?.orientation === 'portrait' || (it?.medias?.[0]?.height > it?.medias?.[0]?.width));
+    const landscapes = allItems.filter((it) => it?.orientation === 'landscape' || (it?.medias?.[0]?.width >= it?.medias?.[0]?.height));
+    const used = new Set();
+    const takeNext = (arr) => {
+      while (arr.length && used.has(arr[0]?.id)) arr.shift();
+      const v = arr.shift();
+      if (v) used.add(v.id);
+      return v;
+    };
+    const slidesArr = [];
+    for (let p = 0; p < 4; p++) {
+      const page = [];
+      // Prefer 2 landscapes + 2 portraits for visual balance
+      for (let i = 0; i < 2; i++) {
+        const l = takeNext(landscapes);
+        if (l) page.push(l);
+      }
+      for (let i = 0; i < 2; i++) {
+        const pr = takeNext(portraits);
+        if (pr) page.push(pr);
+      }
+      // Fallback fill from any remaining items if page < 4
+      if (page.length < 4) {
+        const rest = allItems.filter((it) => !used.has(it.id));
+        for (const r of rest) {
+          page.push(r);
+          used.add(r.id);
+          if (page.length === 4) break;
+        }
+      }
+      if (page.length) slidesArr.push(page);
+      // Stop if no more items
+      if (allItems.filter((it) => !used.has(it.id)).length === 0) break;
+    }
+    return slidesArr;
   }, [allItems]);
 
   // Auto play every 8s (DISABLED)
