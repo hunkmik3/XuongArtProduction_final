@@ -143,8 +143,12 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
 
   // Style cho mobile vs desktop
   const cardStyle = useMemo(() => {
-    return { aspectRatio: aspectRatioValue };
-  }, [aspectRatioValue]);
+    if (isMobile) {
+      return { aspectRatio: aspectRatioValue };
+    }
+    const minH = orientation === 'portrait' ? 320 : 240;
+    return { aspectRatio: aspectRatioValue, minHeight: `${minH}px` };
+  }, [aspectRatioValue, isMobile, orientation]);
 
   // Tính toán span cho masonry grid dựa vào chiều cao thực tế
   useEffect(() => {
@@ -600,9 +604,9 @@ export default function PortfolioPage() {
           <AnimatePresence mode="popLayout">
             <motion.div
               layout
-              className="mt-10 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-2"
+              className="mt-10 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-3"
               style={{
-                gridAutoRows: '8px', // base row height for row-span calculation
+                gridAutoRows: '12px', // base row height for row-span calculation (larger tiles)
                 gridAutoFlow: 'dense',
                 maxWidth: '1400px',
                 margin: '0 auto',
