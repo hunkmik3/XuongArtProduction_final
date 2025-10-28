@@ -146,7 +146,8 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
     if (isMobile) {
       return { aspectRatio: aspectRatioValue };
     }
-    const minH = orientation === 'portrait' ? 320 : 240;
+    // Portrait giữ nguyên, Landscape thu nhỏ một chút
+    const minH = orientation === 'portrait' ? 320 : 200; // landscape nhỏ hơn
     return { aspectRatio: aspectRatioValue, minHeight: `${minH}px` };
   }, [aspectRatioValue, isMobile, orientation]);
 
@@ -606,7 +607,7 @@ export default function PortfolioPage() {
               layout
               className="mt-10 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-3"
               style={{
-                gridAutoRows: '12px', // base row height for row-span calculation (larger tiles)
+                gridAutoRows: '10px', // giảm base row -> landscape nhỏ hơn
                 gridAutoFlow: 'dense',
                 maxWidth: '1400px',
                 margin: '0 auto',
