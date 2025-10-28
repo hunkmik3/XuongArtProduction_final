@@ -12,6 +12,7 @@ const RichTextRenderer = ({ content, className = "" }) => {
     // If content is rich text object, convert to HTML
     if (Array.isArray(content)) {
       return content.map(block => {
+        // Handle different block types
         if (block.type === 'paragraph' && block.children) {
           const paragraphHtml = block.children.map(child => {
             let text = child.text || '';
@@ -28,6 +29,43 @@ const RichTextRenderer = ({ content, className = "" }) => {
           
           return `<p>${paragraphHtml}</p>`;
         }
+        
+        // Handle heading blocks
+        if (block.type === 'heading' && block.children) {
+          const level = block.level || 1;
+          const headingHtml = block.children.map(child => {
+            let text = child.text || '';
+            
+            if (child.bold) text = `<strong>${text}</strong>`;
+            if (child.italic) text = `<em>${text}</em>`;
+            
+            return text;
+          }).join('');
+          
+          return `<h${level}>${headingHtml}</h${level}>`;
+        }
+        
+        // Handle list blocks
+        if (block.type === 'list' && block.children) {
+          const listType = block.format === 'ordered' ? 'ol' : 'ul';
+          const items = block.children.map(item => {
+            if (item.type === 'list-item' && item.children) {
+              const itemHtml = item.children.map(child => {
+                let text = child.text || '';
+                if (child.type === 'link') {
+                  return `<a href="${child.url || '#'}">${text}</a>`;
+                }
+                if (child.bold) text = `<strong>${text}</strong>`;
+                if (child.italic) text = `<em>${text}</em>`;
+                return text;
+              }).join('');
+              return `<li>${itemHtml}</li>`;
+            }
+            return '';
+          }).join('');
+          return `<${listType}>${items}</${listType}>`;
+        }
+        
         return '';
       }).join('');
     }
@@ -39,6 +77,7 @@ const RichTextRenderer = ({ content, className = "" }) => {
     <div 
       className={`prose prose-sm max-w-none ${className}`}
       dangerouslySetInnerHTML={{ __html: htmlContent }}
+      style={{ whiteSpace: 'pre-wrap' }}
     />
   );
 };
