@@ -359,6 +359,9 @@ const ProjectsGallery = () => {
               tagline: excerpt,
               description: rawFull, // Giữ nguyên rich text format
               category: project.attributes?.category || '',
+              categories: Array.isArray(project.attributes?.categories)
+                ? project.attributes.categories
+                : (project.attributes?.category ? [project.attributes.category] : []),
               featured: project.attributes?.featured || false,
               slug: project.attributes?.slug || '',
               order: project.attributes?.order || project.id,
