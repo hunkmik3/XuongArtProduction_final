@@ -481,7 +481,7 @@ export default function PortfolioPage() {
 
   return (
     <main className="bg-white text-black">
-      <Container className="pt-24 sm:pt-32">
+      <Container className="pt-12 sm:pt-16">
         <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="font-display text-4xl font-semibold sm:text-6xl">Portfolio</h1>

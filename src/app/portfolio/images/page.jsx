@@ -218,7 +218,7 @@ export default function ImageProjectsPage() {
 
   return (
     <main className="bg-white text-black">
-      <Container className="pt-24 sm:pt-32">
+      <Container className="pt-12 sm:pt-16">
         <div className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="font-display text-3xl sm:text-4xl md:text-6xl font-semibold">Dự án Hình ảnh</h1>
