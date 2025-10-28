@@ -162,23 +162,21 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
     console.log(`🎨 Rendering Project ${item.id} (${item.title}) with classes: ${gridSpanClasses}`);
   }
 
-  // Tính aspect ratio để hiển thị đúng trên mobile
+  // Aspect ratio để hiển thị đúng theo orientation Strapi
   const aspectRatioValue = useMemo(() => {
-    if (item.thumbWidth && item.thumbHeight) {
-      return item.thumbWidth / item.thumbHeight;
-    } else if (item.width && item.height) {
-      return item.width / item.height;
-    }
-    return 1; // Default square
-  }, [item.thumbWidth, item.thumbHeight, item.width, item.height]);
+    if (orientation === 'portrait') return 9/16;
+    if (orientation === 'landscape') return 16/9;
+    // Fallback theo kích thước thật nếu orientation không xác định
+    if (item.thumbWidth && item.thumbHeight) return item.thumbWidth / item.thumbHeight;
+    if (item.width && item.height) return item.width / item.height;
+    return 16/9;
+  }, [orientation, item.thumbWidth, item.thumbHeight, item.width, item.height]);
 
   // Style cho mobile vs desktop
   const cardStyle = useMemo(() => {
-    if (isMobile) {
-      return { aspectRatio: aspectRatioValue };
-    }
-    return { minHeight: '240px' };
-  }, [isMobile, aspectRatioValue]);
+    // Cố định tỉ lệ hiển thị theo orientation cho cả mobile & desktop để không sai tỉ lệ
+    return { aspectRatio: aspectRatioValue };
+  }, [aspectRatioValue]);
 
   return (
     <motion.div
@@ -201,7 +199,7 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
                 alt={item.title}
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="object-cover"
+                className="object-contain"
                 loading="lazy"
               />
             ) : (
@@ -209,7 +207,7 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
                 <video
                   ref={videoRef}
                   src={item.video}
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-contain"
                   muted
                   playsInline
                   controls={false}
@@ -240,7 +238,7 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
             src={item.media}
             alt={item.title || "Project"}
             fill
-            className="object-cover"
+            className="object-contain"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             loading="lazy"
           />
