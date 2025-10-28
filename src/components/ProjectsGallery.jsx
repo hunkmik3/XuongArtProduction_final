@@ -462,7 +462,7 @@ const ProjectsGallery = () => {
   const itemsPerSlideMobile = 3; // Mobile only
   
   const slides = useMemo(() => {
-    const totalItems = normalizedItems.length;
+    const totalItems = allItems.length;
     const numSlides = Math.ceil(totalItems / itemsPerSlide);
     
     console.log('📊 Building slides:', {
@@ -472,9 +472,9 @@ const ProjectsGallery = () => {
     });
     
     return Array.from({ length: numSlides }, (_, i) => {
-      return normalizedItems.slice(i * itemsPerSlide, (i + 1) * itemsPerSlide);
+      return allItems.slice(i * itemsPerSlide, (i + 1) * itemsPerSlide);
     }).filter(slide => slide.length > 0);
-  }, [normalizedItems]);
+  }, [allItems]);
   
   // Build mobile-specific slides: 4 pages, each with [1 portrait (left tall), 2 landscape (right)]
   const mobileSlides = useMemo(() => {
