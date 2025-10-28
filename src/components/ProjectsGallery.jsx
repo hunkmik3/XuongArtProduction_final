@@ -282,11 +282,21 @@ const FeaturedCard = ({ areaName, slotShape, item, onOpen, index = 0 }) => {
           {item.tagline && (
             <div className="mt-3 text-sm text-neutral-200 line-clamp-2 leading-relaxed">{item.tagline}</div>
           )}
-          {/* Category badge */}
-          {item.category && (
-            <div className="mt-3 inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium text-white border border-white/30">
-              {item.category}
+          {/* Category badges (multi-support) */}
+          {Array.isArray(item.categories) && item.categories.length > 0 ? (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {item.categories.map((cat, idx) => (
+                <div key={idx} className="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium text-white border border-white/30">
+                  {cat}
+                </div>
+              ))}
             </div>
+          ) : (
+            item.category && (
+              <div className="mt-3 inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium text-white border border-white/30">
+                {item.category}
+              </div>
+            )
           )}
         </div>
       </div>
