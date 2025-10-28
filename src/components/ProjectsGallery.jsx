@@ -724,10 +724,21 @@ const ProjectsGallery = () => {
                   {selectedProject.completionDate && (
                     <TimeAgo completionDate={selectedProject.completionDate} className="text-neutral-300 text-xs lg:text-sm" />
                   )}
-                  {selectedProject.category && (
-                    <div className="inline-block px-2 py-0.5 lg:px-3 lg:py-1 bg-white/10 rounded-full text-xs font-medium text-white border border-white/20">
-                      {selectedProject.category}
+                  {/* Show multi categories if available, otherwise fallback to single category */}
+                  {Array.isArray(selectedProject.categories) && selectedProject.categories.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {selectedProject.categories.map((cat, index) => (
+                        <div key={index} className="inline-block px-2 py-0.5 lg:px-3 lg:py-1 bg-white/10 rounded-full text-xs font-medium text-white border border-white/20">
+                          {cat}
+                        </div>
+                      ))}
                     </div>
+                  ) : (
+                    selectedProject.category && (
+                      <div className="inline-block px-2 py-0.5 lg:px-3 lg:py-1 bg-white/10 rounded-full text-xs font-medium text-white border border-white/20">
+                        {selectedProject.category}
+                      </div>
+                    )
                   )}
                 </div>
 
