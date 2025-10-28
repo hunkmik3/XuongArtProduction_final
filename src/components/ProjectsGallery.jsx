@@ -623,7 +623,14 @@ const ProjectsGallery = () => {
                 </div>
 
                 {/* Mobile grid: 3 items per page, fixed layout: left tall (2 rows), right two stacked */}
-                <div className="grid grid-cols-2 grid-rows-2 gap-3 px-4 lg:hidden" style={{ minHeight: '50vh' }}>
+                <div
+                  className="grid grid-cols-2 grid-rows-2 gap-3 px-4 lg:hidden"
+                  style={{
+                    height: '70vh',
+                    gridTemplateColumns: '0.95fr 1.05fr',
+                    gridTemplateRows: '1fr 1fr'
+                  }}
+                >
                   {console.log('📱 Mobile grid items:', mobileSlides[mobileSlide])}
                   {(() => {
                     const items = mobileSlides[mobileSlide] || [];
@@ -639,12 +646,12 @@ const ProjectsGallery = () => {
                         )}
                         {b && (
                           <div className="">
-                            <FeaturedCard item={b} onOpen={openProject} index={1} />
+                            <FeaturedCard item={b} onOpen={openProject} index={1} fillHeight />
                           </div>
                         )}
                         {c && (
                           <div className="">
-                            <FeaturedCard item={c} onOpen={openProject} index={2} />
+                            <FeaturedCard item={c} onOpen={openProject} index={2} fillHeight />
                           </div>
                         )}
                       </>
