@@ -331,6 +331,22 @@ const ProjectsGallery = () => {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [isModalOpen]);
+
+  // Lock body scroll when modal open (mobile + desktop)
+  useEffect(() => {
+    if (!isModalOpen) return;
+    const originalOverflow = document.body.style.overflow;
+    const originalTouchAction = document.body.style.touchAction;
+    document.body.style.overflow = 'hidden';
+    document.body.style.touchAction = 'none';
+    const preventTouchMove = (e) => e.preventDefault();
+    document.addEventListener('touchmove', preventTouchMove, { passive: false });
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.touchAction = originalTouchAction;
+      document.removeEventListener('touchmove', preventTouchMove);
+    };
+  }, [isModalOpen]);
   const [slide, setSlide] = useState(0);
   const [mobileSlide, setMobileSlide] = useState(0); // Separate state for mobile
   const [projects, setProjects] = useState([]);
