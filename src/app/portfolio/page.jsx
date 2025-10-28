@@ -92,13 +92,8 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
     
     console.log(`Item ${index} (${item.title}): ${width}x${height}, aspectRatio=${aspectRatio.toFixed(2)}, orientation=${orientation}, variation=${variation}`);
     
-    // Chỉ điều khiển col-span để bất đối xứng, row-span sẽ tính theo chiều cao thực tế
-    if (orientation === 'landscape') {
-      if (aspectRatio > 1.6) return 'col-span-1 sm:col-span-2';
-      return variation < 2 ? 'col-span-1 sm:col-span-2' : 'col-span-1';
-    }
-    // portrait
-    return 'col-span-1';
+    // Masonry 3 cột: tất cả giữ 1 cột để khít; bất đối xứng tạo bởi chiều cao thực tế
+    return 'col-span-1 sm:col-span-1';
   }, [item.thumbWidth, item.thumbHeight, item.width, item.height, orientation, index, item.title]);
 
   // Video metadata load handler (không cần auto-play nữa)
@@ -605,9 +600,9 @@ export default function PortfolioPage() {
           <AnimatePresence mode="popLayout">
             <motion.div
               layout
-              className="mt-10 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-3"
+              className="mt-10 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-2"
               style={{
-                gridAutoRows: '10px', // giảm base row -> landscape nhỏ hơn
+                gridAutoRows: '8px', // base row height nhỏ để pack khít hơn
                 gridAutoFlow: 'dense',
                 maxWidth: '1400px',
                 margin: '0 auto',
