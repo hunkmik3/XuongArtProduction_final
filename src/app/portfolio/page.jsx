@@ -177,7 +177,8 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
     if (isMobile) {
       return { aspectRatio: aspectRatioValue };
     }
-    return { minHeight: '240px' };
+    // Desktop/tablet: cap max height to avoid overly large tiles
+    return { minHeight: '240px', maxHeight: '520px' };
   }, [isMobile, aspectRatioValue]);
 
   return (
@@ -619,7 +620,7 @@ export default function PortfolioPage() {
               layout
               className="mt-10 grid gap-1 sm:gap-2 grid-cols-1 sm:grid-cols-3 lg:grid-cols-3"
               style={{
-                gridAutoRows: 'minmax(240px, auto)',
+                gridAutoRows: 'minmax(200px, auto)',
                 gridAutoFlow: 'dense',
                 maxWidth: '1400px',
                 margin: '0 auto',
