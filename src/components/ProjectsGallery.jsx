@@ -439,7 +439,7 @@ const ProjectsGallery = () => {
   // Build slides based on available items
   // Mobile: 4 items per page, Desktop: 6 items per page
   const itemsPerSlide = 6; // Desktop/Tablet
-  const itemsPerSlideMobile = 4; // Mobile only
+  const itemsPerSlideMobile = 3; // Mobile only
   
   const slides = useMemo(() => {
     const totalItems = allItems.length;
@@ -456,13 +456,12 @@ const ProjectsGallery = () => {
     }).filter(slide => slide.length > 0);
   }, [allItems]);
   
-  // Build mobile-specific slides (4 items per page)
+  // Build mobile-specific slides (3 items per page, max 4 pages)
   const mobileSlides = useMemo(() => {
-    const totalItems = allItems.length;
-    const numSlides = Math.ceil(totalItems / itemsPerSlideMobile);
-    
+    const capped = allItems.slice(0, itemsPerSlideMobile * 4);
+    const numSlides = 4;
     return Array.from({ length: numSlides }, (_, i) => {
-      return allItems.slice(i * itemsPerSlideMobile, (i + 1) * itemsPerSlideMobile);
+      return capped.slice(i * itemsPerSlideMobile, (i + 1) * itemsPerSlideMobile);
     }).filter(slide => slide.length > 0);
   }, [allItems]);
 
@@ -618,18 +617,18 @@ const ProjectsGallery = () => {
                   {console.log('🔧 After assignToPattern:', assignToPattern(slides[slide], SLIDE_PATTERNS[slide % SLIDE_PATTERNS.length]))}
                 </div>
 
-                {/* Mobile/Tablet grid - show 4 items per page from mobile slides */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 px-4 lg:hidden" style={{ minHeight: '50vh' }}>
+                {/* Mobile grid: 3 items per page, first item spans 2 rows */}
+                <div className="grid grid-cols-2 grid-rows-2 gap-3 px-4 lg:hidden" style={{ minHeight: '50vh' }}>
                   {console.log('📱 Mobile grid items:', mobileSlides[mobileSlide])}
                   {mobileSlides[mobileSlide]?.map((item, idx) => (
-                    <FeaturedCard
-                      key={`m-${mobileSlide}-${item.id}-${idx}`}
-                      tabletFallback
-                      slotShape="square"
-                      item={item}
-                      onOpen={openProject}
-                      index={idx}
-                    />
+                    <div key={`m-${mobileSlide}-${item.id}-${idx}`} className={idx === 0 ? 'row-span-2' : ''}>
+                      <FeaturedCard
+                        tabletFallback
+                        item={item}
+                        onOpen={openProject}
+                        index={idx}
+                      />
+                    </div>
                   ))}
                 </div>
 
