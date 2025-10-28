@@ -444,12 +444,14 @@ export default function PortfolioPage() {
     document.body.style.top = `-${scrollY}px`;
     document.body.style.width = '100%';
     document.body.style.overscrollBehaviorY = 'contain';
+    document.documentElement.classList.add('modal-open');
     return () => {
       document.body.style.overflow = prev.overflow;
       document.body.style.position = prev.position;
       document.body.style.top = prev.top;
       document.body.style.width = prev.width;
       document.body.style.overscrollBehaviorY = prev.overscrollBehaviorY;
+      document.documentElement.classList.remove('modal-open');
       window.scrollTo(0, scrollY);
     };
   }, [isOpen]);
