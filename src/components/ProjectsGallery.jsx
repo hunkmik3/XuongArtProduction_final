@@ -204,7 +204,7 @@ const FeaturedCard = ({ areaName, slotShape, item, onOpen, index = 0, fillHeight
           ? 'col-span-3 row-span-1'
           : 'col-span-1 row-span-1'
       )}
-      style={{
+              style={{
         ...(areaName ? { gridArea: areaName } : {}),
         width: '100%',
         height: fillHeight ? '100%' : 'auto',
@@ -225,7 +225,7 @@ const FeaturedCard = ({ areaName, slotShape, item, onOpen, index = 0, fillHeight
               src={item.media}
               className="h-full w-full"
               style={{
-                objectFit: fillHeight ? 'cover' : 'contain',
+                objectFit: 'cover',
                 objectPosition: 'center center',
                 width: '100%',
                 height: '100%',
@@ -455,7 +455,7 @@ const ProjectsGallery = () => {
   // Build slides based on available items
   // Mobile: 4 items per page, Desktop: 6 items per page
   const itemsPerSlide = 6; // Desktop/Tablet
-  const itemsPerSlideMobile = 3; // Mobile only
+  const itemsPerSlideMobile = 4; // Mobile only (2x2 grid)
   
   const slides = useMemo(() => {
     const totalItems = allItems.length;
@@ -472,11 +472,11 @@ const ProjectsGallery = () => {
     }).filter(slide => slide.length > 0);
   }, [allItems]);
   
-  // Build mobile-specific slides: simple chunks of 3 items (order preserved)
+  // Build mobile-specific slides: simple chunks of 4 items (order preserved)
   const mobileSlides = useMemo(() => {
     const arr = [...allItems];
-    const numSlides = Math.ceil(arr.length / 3);
-    return Array.from({ length: numSlides }, (_, i) => arr.slice(i * 3, (i + 1) * 3)).filter(s => s.length > 0);
+    const numSlides = Math.ceil(arr.length / 4);
+    return Array.from({ length: numSlides }, (_, i) => arr.slice(i * 4, (i + 1) * 4)).filter(s => s.length > 0);
   }, [allItems]);
 
   // Auto play every 8s (DISABLED)
@@ -631,33 +631,15 @@ const ProjectsGallery = () => {
                   {console.log('🔧 After assignToPattern:', assignToPattern(slides[slide], SLIDE_PATTERNS[slide % SLIDE_PATTERNS.length]))}
                 </div>
 
-                {/* Mobile grid: 3 items per page, auto layout by orientation without cropping */}
-                <div className="px-4 lg:hidden space-y-3">
-                  {(() => {
-                    const items = mobileSlides[mobileSlide] || [];
-                    if (!items.length) return null;
-                    // 1) Item portrait (or first item if none portrait) on top, full width, contain
-                    const portraitIdx = items.findIndex(isPortraitItem);
-                    const topIdx = portraitIdx !== -1 ? portraitIdx : 0;
-                    const top = items[topIdx];
-                    const rest = items.filter((_, i) => i !== topIdx);
-                    return (
-                      <>
-                        {top && (
-                          <div className="w-full">
-                            <FeaturedCard item={top} onOpen={openProject} index={0} forceAspectRatio={9/16} />
-                          </div>
-                        )}
-                        <div className="grid grid-cols-2 gap-3">
-                          {rest.map((it, i) => (
-                            <div key={i}>
-                              <FeaturedCard item={it} onOpen={openProject} index={i+1} forceAspectRatio={16/9} />
-                            </div>
-                          ))}
-                        </div>
-                      </>
-                    );
-                  })()}
+                {/* Mobile grid: 2x2 like mockup; no whitespace in autoplay (use cover) */}
+                <div className="px-4 lg:hidden">
+                  <div className="grid grid-cols-2 gap-3">
+                    {(mobileSlides[mobileSlide] || []).map((it, i) => (
+                      <div key={i}>
+                        <FeaturedCard item={it} onOpen={openProject} index={i} fillHeight forceAspectRatio={1} />
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Navigation indicators - inside motion div to stay with content */}
