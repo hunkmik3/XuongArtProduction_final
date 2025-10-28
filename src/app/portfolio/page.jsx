@@ -148,13 +148,10 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
     return 16/9;
   }, [orientation, item.thumbWidth, item.thumbHeight, item.width, item.height]);
 
-  // Style cho mobile vs desktop
+  // Style: luôn giữ đúng tỉ lệ mong muốn (9:16 cho dọc, 16:9 cho ngang)
   const cardStyle = useMemo(() => {
-    // Desktop dùng row-span cố định theo pattern, không ép aspectRatio
-    if (!isMobile) return {};
-    // Mobile giữ aspectRatio để đúng tỉ lệ
     return { aspectRatio: aspectRatioValue };
-  }, [aspectRatioValue, isMobile]);
+  }, [aspectRatioValue]);
 
   // Xếp theo pattern cố định dựa vào index (không phụ thuộc tải media)
   const slot = useMemo(() => MASONRY_PATTERN[index % MASONRY_PATTERN.length], [index]);
@@ -209,7 +206,7 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
                 alt={item.title}
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className={isMobile ? "object-contain" : "object-cover"}
+                className="object-contain"
                 loading="lazy"
               />
             ) : (
@@ -217,7 +214,7 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
                 <video
                   ref={videoRef}
                   src={item.video}
-                  className={isMobile ? "h-full w-full object-contain" : "h-full w-full object-cover"}
+                  className="h-full w-full object-contain"
                   muted
                   playsInline
                   controls={false}
@@ -248,7 +245,7 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
             src={item.media}
             alt={item.title || "Project"}
             fill
-            className={isMobile ? "object-contain" : "object-cover"}
+            className="object-contain"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             loading="lazy"
           />
