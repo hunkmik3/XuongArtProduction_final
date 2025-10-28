@@ -464,7 +464,7 @@ const ProjectsGallery = () => {
   // Build slides based on available items
   // Mobile: 4 items per page, Desktop: 6 items per page
   const itemsPerSlide = 6; // Desktop/Tablet
-  const itemsPerSlideMobile = 4; // Mobile only (2x2 grid)
+  const itemsPerSlideMobile = 3; // Mobile only (1 portrait left + 2 landscape right)
   
   const slides = useMemo(() => {
     const totalItems = allItems.length;
@@ -481,7 +481,7 @@ const ProjectsGallery = () => {
     }).filter(slide => slide.length > 0);
   }, [allItems]);
   
-  // Build mobile-specific slides (2x2): ignore order; group by orientation from Strapi
+  // Build mobile-specific slides (1P + 2L): ignore order; group by orientation from Strapi
   const mobileSlides = useMemo(() => {
     const portraits = allItems.filter((it) => normalizeOrientation(it?.orientation) === 'portrait' || (!it?.orientation && (it?.medias?.[0]?.height > it?.medias?.[0]?.width)));
     const landscapes = allItems.filter((it) => normalizeOrientation(it?.orientation) === 'landscape' || (!it?.orientation && (it?.medias?.[0]?.width >= it?.medias?.[0]?.height)));
@@ -495,26 +495,22 @@ const ProjectsGallery = () => {
     const slidesArr = [];
     for (let p = 0; p < 4; p++) {
       const page = [];
-      // Prefer 2 landscapes + 2 portraits for visual balance
-      for (let i = 0; i < 2; i++) {
-        const l = takeNext(landscapes);
-        if (l) page.push(l);
-      }
-      for (let i = 0; i < 2; i++) {
-        const pr = takeNext(portraits);
-        if (pr) page.push(pr);
-      }
-      // Fallback fill from any remaining items if page < 4
-      if (page.length < 4) {
+      const pr = takeNext(portraits);
+      if (pr) page.push(pr);
+      const l1 = takeNext(landscapes);
+      if (l1) page.push(l1);
+      const l2 = takeNext(landscapes);
+      if (l2) page.push(l2);
+      // Fallback fill if < 3
+      if (page.length < 3) {
         const rest = allItems.filter((it) => !used.has(it.id));
         for (const r of rest) {
           page.push(r);
           used.add(r.id);
-          if (page.length === 4) break;
+          if (page.length === 3) break;
         }
       }
       if (page.length) slidesArr.push(page);
-      // Stop if no more items
       if (allItems.filter((it) => !used.has(it.id)).length === 0) break;
     }
     return slidesArr;
@@ -672,15 +668,33 @@ const ProjectsGallery = () => {
                   {console.log('🔧 After assignToPattern:', assignToPattern(slides[slide], SLIDE_PATTERNS[slide % SLIDE_PATTERNS.length]))}
                 </div>
 
-                {/* Mobile grid: 2x2 like mockup; no whitespace in autoplay (use cover) */}
-                <div className="px-4 lg:hidden">
-                  <div className="grid grid-cols-2 gap-3">
-                    {(mobileSlides[mobileSlide] || []).map((it, i) => (
-                      <div key={i}>
-                        <FeaturedCard item={it} onOpen={openProject} index={i} fillHeight forceAspectRatio={1} />
-                      </div>
-                    ))}
-                  </div>
+                {/* Mobile grid: 1 portrait (left, tall) + 2 landscapes (right stacked) */}
+                <div className="grid grid-cols-2 grid-rows-2 gap-3 px-4 lg:hidden">
+                  {(() => {
+                    const items = mobileSlides[mobileSlide] || [];
+                    const a = items[0];
+                    const b = items[1];
+                    const c = items[2];
+                    return (
+                      <>
+                        {a && (
+                          <div className="row-span-2">
+                            <FeaturedCard item={a} onOpen={openProject} index={0} fillHeight forceAspectRatio={9/16} />
+                          </div>
+                        )}
+                        {b && (
+                          <div>
+                            <FeaturedCard item={b} onOpen={openProject} index={1} fillHeight forceAspectRatio={16/9} />
+                          </div>
+                        )}
+                        {c && (
+                          <div>
+                            <FeaturedCard item={c} onOpen={openProject} index={2} fillHeight forceAspectRatio={16/9} />
+                          </div>
+                        )}
+                      </>
+                    );
+                  })()}
                 </div>
 
                 {/* Navigation indicators - inside motion div to stay with content */}
