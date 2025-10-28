@@ -720,9 +720,9 @@ const ProjectsGallery = () => {
               onClick={(e) => e.stopPropagation()}
             >
               {/* Mobile top bar (black) with close button */}
-              <div className="sm:hidden sticky top-0 z-20 bg-black/90 text-white px-4 py-3 flex justify-end">
+              <div className="sm:hidden sticky top-0 z-20 bg-black/90 text-white px-4 py-3 flex justify-end pointer-events-auto" onClick={(e)=>e.stopPropagation()}>
                 <button
-                  onClick={closeProject}
+                  onClick={(e)=>{ e.stopPropagation(); closeProject(); }}
                   className="p-2 rounded-full hover:bg-white/10 focus:outline-none"
                   aria-label="Đóng"
                 >
@@ -731,7 +731,7 @@ const ProjectsGallery = () => {
               </div>
               {/* Close */}
               <button
-                onClick={closeProject}
+                onClick={(e)=>{ e.stopPropagation(); closeProject(); }}
                 className="hidden sm:flex absolute top-3 sm:top-4 right-3 sm:right-4 z-10 h-10 w-10 items-center justify-center rounded-full bg-white/20 border border-white/30 text-white hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white/50"
                 aria-label="Đóng"
               >
