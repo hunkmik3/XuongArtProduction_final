@@ -104,7 +104,7 @@ const assignToPattern = (items, pattern, orientationMap = {}) => {
 };
 
 // Individual project card component
-const FeaturedCard = ({ areaName, slotShape, item, onOpen, index = 0 }) => {
+const FeaturedCard = ({ areaName, slotShape, item, onOpen, index = 0, fillHeight = false }) => {
   const ref = useRef(null);
   const videoRef = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-10%" });
@@ -206,10 +206,9 @@ const FeaturedCard = ({ areaName, slotShape, item, onOpen, index = 0 }) => {
       )}
       style={{
         ...(areaName ? { gridArea: areaName } : {}),
-        // Thẻ chiếm toàn bộ bề ngang, chiều cao theo tỉ lệ media để không crop/không viền
         width: '100%',
-        height: 'auto',
-        aspectRatio: videoAspectRatio || 16/9
+        height: fillHeight ? '100%' : 'auto',
+        ...(fillHeight ? {} : { aspectRatio: videoAspectRatio || 16/9 })
       }}
       whileHover={{ 
         scale: 1.03,
@@ -617,19 +616,34 @@ const ProjectsGallery = () => {
                   {console.log('🔧 After assignToPattern:', assignToPattern(slides[slide], SLIDE_PATTERNS[slide % SLIDE_PATTERNS.length]))}
                 </div>
 
-                {/* Mobile grid: 3 items per page, first item spans 2 rows */}
+                {/* Mobile grid: 3 items per page, fixed layout: left tall (2 rows), right two stacked */}
                 <div className="grid grid-cols-2 grid-rows-2 gap-3 px-4 lg:hidden" style={{ minHeight: '50vh' }}>
                   {console.log('📱 Mobile grid items:', mobileSlides[mobileSlide])}
-                  {mobileSlides[mobileSlide]?.map((item, idx) => (
-                    <div key={`m-${mobileSlide}-${item.id}-${idx}`} className={idx === 0 ? 'row-span-2' : ''}>
-                      <FeaturedCard
-                        tabletFallback
-                        item={item}
-                        onOpen={openProject}
-                        index={idx}
-                      />
-                    </div>
-                  ))}
+                  {(() => {
+                    const items = mobileSlides[mobileSlide] || [];
+                    const a = items[0];
+                    const b = items[1];
+                    const c = items[2];
+                    return (
+                      <>
+                        {a && (
+                          <div className="row-span-2">
+                            <FeaturedCard item={a} onOpen={openProject} index={0} fillHeight />
+                          </div>
+                        )}
+                        {b && (
+                          <div className="">
+                            <FeaturedCard item={b} onOpen={openProject} index={1} />
+                          </div>
+                        )}
+                        {c && (
+                          <div className="">
+                            <FeaturedCard item={c} onOpen={openProject} index={2} />
+                          </div>
+                        )}
+                      </>
+                    );
+                  })()}
                 </div>
 
                 {/* Navigation indicators - inside motion div to stay with content */}
