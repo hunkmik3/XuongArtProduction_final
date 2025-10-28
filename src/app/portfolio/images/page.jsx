@@ -316,7 +316,7 @@ export default function ImageProjectsPage() {
           <AnimatePresence mode="popLayout">
             <motion.div
               layout
-              className="mt-10 grid gap-6 sm:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+              className="mt-10 grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
               initial="hidden"
               animate="visible"
               variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}
@@ -466,7 +466,7 @@ export default function ImageProjectsPage() {
 
                   {/* Images grid */}
                   {selected.allImages && selected.allImages.length > 0 ? (
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                       {selected.allImages.map((img, index) => (
                         <motion.div
                           key={index}
