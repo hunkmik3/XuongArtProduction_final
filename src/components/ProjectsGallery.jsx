@@ -708,7 +708,7 @@ const ProjectsGallery = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
-            className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70"
+            className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/70"
             onClick={closeProject}
           >
             <motion.div
@@ -720,10 +720,10 @@ const ProjectsGallery = () => {
               onClick={(e) => e.stopPropagation()}
             >
               {/* Mobile top bar (black) with close button */}
-              <div className="sm:hidden sticky top-0 z-20 bg-black/90 text-white px-4 py-3 flex justify-end pointer-events-auto" onClick={(e)=>e.stopPropagation()}>
+              <div className="sm:hidden sticky top-0 z-20 bg-black/90 text-white px-4 py-3 flex justify-end pointer-events-auto select-none" onClick={(e)=>e.stopPropagation()}>
                 <button
                   onClick={(e)=>{ e.stopPropagation(); closeProject(); }}
-                  className="p-2 rounded-full hover:bg-white/10 focus:outline-none"
+                  className="relative z-[100000] p-2 rounded-full hover:bg-white/10 focus:outline-none"
                   aria-label="Đóng"
                 >
                   ✕
