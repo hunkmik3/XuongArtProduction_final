@@ -507,7 +507,7 @@ const ProjectsGallery = () => {
     }
     // Last page: 2P side-by-side (fill with remaining if thiếu)
     const last = [];
-    for (let i = 0; i < 2; i+0+) { const pr = takeNext(portraits); if (pr) last.push(pr); }
+    for (let i = 0; i < 2; i++) { const pr = takeNext(portraits); if (pr) last.push(pr); }
     if (last.length < 2) {
       const rest = allItems.filter((it) => !used.has(it.id));
       for (const r of rest) { last.push(r); if (last.length === 2) break; }
