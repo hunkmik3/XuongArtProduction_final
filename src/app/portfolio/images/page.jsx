@@ -158,19 +158,29 @@ export default function ImageProjectsPage() {
     return () => window.removeEventListener('keydown', onKey);
   }, [isOpen, selected]);
 
-  // Lock body scroll when modal open (mobile + desktop)
+  // Lock body scroll when modal open (mobile + desktop), but allow scrolling inside modal
   useEffect(() => {
     if (!isOpen) return;
-    const originalOverflow = document.body.style.overflow;
-    const originalTouchAction = document.body.style.touchAction;
+    const prev = {
+      overflow: document.body.style.overflow,
+      position: document.body.style.position,
+      top: document.body.style.top,
+      width: document.body.style.width,
+      overscrollBehaviorY: document.body.style.overscrollBehaviorY,
+    };
+    const scrollY = window.scrollY || window.pageYOffset || 0;
     document.body.style.overflow = 'hidden';
-    document.body.style.touchAction = 'none';
-    const preventTouchMove = (e) => e.preventDefault();
-    document.addEventListener('touchmove', preventTouchMove, { passive: false });
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = '100%';
+    document.body.style.overscrollBehaviorY = 'contain';
     return () => {
-      document.body.style.overflow = originalOverflow;
-      document.body.style.touchAction = originalTouchAction;
-      document.removeEventListener('touchmove', preventTouchMove);
+      document.body.style.overflow = prev.overflow;
+      document.body.style.position = prev.position;
+      document.body.style.top = prev.top;
+      document.body.style.width = prev.width;
+      document.body.style.overscrollBehaviorY = prev.overscrollBehaviorY;
+      window.scrollTo(0, scrollY);
     };
   }, [isOpen]);
 
