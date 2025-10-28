@@ -374,8 +374,9 @@ export default function ImageProjectsPage() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <AuthorAvatar size="xs" textColor="text-gray-600" />
-                    <span className="text-gray-500">•</span>
-                    <h2 className="text-xl font-semibold text-gray-900">{selected.title}</h2>
+                    {/* Hide project title next to author on mobile */}
+                    <span className="hidden sm:inline text-gray-500">•</span>
+                    <h2 className="hidden sm:block text-xl font-semibold text-gray-900">{selected.title}</h2>
                     {selected.allImages && selected.allImages.length > 1 && (
                       <>
                         <span className="text-gray-500">•</span>
