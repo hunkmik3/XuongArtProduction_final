@@ -10,8 +10,8 @@ import logoPhobiaDark from "@/images/clients/phobia/logo-dark.svg";
 export default function Home() {
   return (
     <main className="text-black">
-      <ProjectsGallery />
-      <Container className="mt-24 sm:mt-32">
+      {/* Intro section always visible on mobile, moved above featured */}
+      <Container className="mt-6 sm:mt-16">
         <FadeIn className="max-w-3xl">
           <h1 className="font-display text-5xl font-bold tracking-tight text-neutral-950 [text-wrap:balance] sm:text-7xl">
             Xưởng Art – Biến ý tưởng thành trải nghiệm số
@@ -23,6 +23,10 @@ Chúng tôi tin rằng mỗi khung hình đều mang sức mạnh kể chuyện 
           </p>
         </FadeIn>
       </Container>
+      {/* Featured projects placed right under intro with tighter spacing on mobile */}
+      <div className="mt-4 sm:mt-12">
+        <ProjectsGallery />
+      </div>
       <Clients />
       {/* Testimonials section removed by request */}
       <Services />
