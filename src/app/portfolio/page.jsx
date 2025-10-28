@@ -9,10 +9,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { FiSearch } from "react-icons/fi";
 
+// Pattern cho masonry 3 cột (lặp tuần tự)
+// type: 'p' cho slot portrait cao, 'l' cho slot landscape thấp
+const MASONRY_PATTERN = [
+  { col: 1, rowSpan: 28, type: 'p' }, // cột 1 cao
+  { col: 2, rowSpan: 16, type: 'l' }, // hai block ngang nhỏ
+  { col: 3, rowSpan: 16, type: 'l' },
+  { col: 2, rowSpan: 28, type: 'p' }, // cột 2 cao
+  { col: 1, rowSpan: 16, type: 'l' },
+  { col: 3, rowSpan: 28, type: 'p' }, // cột 3 cao
+];
+
 // Component cho từng project card với masonry layout
 const MasonryCard = ({ item, onOpen, index = 0 }) => {
   const videoRef = useRef(null);
-  const containerRef = useRef(null);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [videoAspectRatio, setVideoAspectRatio] = useState(16/9);
   const [isMobile, setIsMobile] = useState(false);
@@ -92,7 +102,7 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
     
     console.log(`Item ${index} (${item.title}): ${width}x${height}, aspectRatio=${aspectRatio.toFixed(2)}, orientation=${orientation}, variation=${variation}`);
     
-    // Masonry 3 cột: tất cả giữ 1 cột để khít; bất đối xứng tạo bởi chiều cao thực tế
+    // Masonry 3 cột: mọi item đều giữ 1 cột, vị trí set bằng style
     return 'col-span-1 sm:col-span-1';
   }, [item.thumbWidth, item.thumbHeight, item.width, item.height, orientation, index, item.title]);
 
@@ -138,41 +148,34 @@ const MasonryCard = ({ item, onOpen, index = 0 }) => {
 
   // Style cho mobile vs desktop
   const cardStyle = useMemo(() => {
-    if (isMobile) {
-      return { aspectRatio: aspectRatioValue };
-    }
-    // Portrait giữ nguyên, Landscape thu nhỏ một chút
-    const minH = orientation === 'portrait' ? 320 : 200; // landscape nhỏ hơn
-    return { aspectRatio: aspectRatioValue, minHeight: `${minH}px` };
-  }, [aspectRatioValue, isMobile, orientation]);
+    return { aspectRatio: aspectRatioValue };
+  }, [aspectRatioValue]);
 
-  // Tính toán span cho masonry grid dựa vào chiều cao thực tế
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const compute = () => {
-      const rowHeight = 8; // khớp với gridAutoRows
-      const gap = 8; // khớp với gap
-      const height = el.getBoundingClientRect().height;
-      const span = Math.ceil((height + gap) / (rowHeight + gap));
-      el.style.gridRowEnd = `span ${span}`;
+  // Xếp theo pattern cố định dựa vào index (không phụ thuộc tải media)
+  const slot = useMemo(() => MASONRY_PATTERN[index % MASONRY_PATTERN.length], [index]);
+  const gridStyle = useMemo(() => {
+    // Nếu orientation khác type slot, tinh chỉnh span nhẹ để hài hoà
+    let span = slot.rowSpan;
+    if (slot.type === 'p' && orientation !== 'portrait') span = Math.max(20, span - 6);
+    if (slot.type === 'l' && orientation !== 'landscape') span = span + 6;
+    return {
+      gridColumn: `${slot.col} / span 1`,
+      gridRowEnd: `span ${span}`,
     };
-    compute();
-    window.addEventListener('resize', compute);
-    return () => window.removeEventListener('resize', compute);
-  }, [aspectRatioValue, orientation, isMobile]);
+  }, [slot, orientation]);
+
+  // Không cần tính span động nữa vì dùng pattern cố định
 
   return (
     <motion.div
-      ref={containerRef}
       layout
       className={`relative group overflow-hidden rounded-2xl bg-neutral-900 text-white shadow-lg cursor-pointer ${gridSpanClasses}`}
       whileHover={{ scale: 1.02 }}
       onClick={() => onOpen && onOpen(item)}
-      initial={{ opacity: 0, scale: 0.9 }}
+      initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      style={cardStyle}
+      style={{ ...cardStyle, ...gridStyle }}
     >
       <div className="relative w-full h-full overflow-hidden bg-neutral-800">
         {isVideo ? (
@@ -602,7 +605,7 @@ export default function PortfolioPage() {
               layout
               className="mt-10 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-2"
               style={{
-                gridAutoRows: '8px', // base row height nhỏ để pack khít hơn
+                gridAutoRows: '8px',
                 gridAutoFlow: 'dense',
                 maxWidth: '1400px',
                 margin: '0 auto',
