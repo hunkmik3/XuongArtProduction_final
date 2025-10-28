@@ -605,8 +605,8 @@ const ProjectsGallery = () => {
                             "rounded-full transition-all duration-300 ease-out",
                             "focus:outline-none focus:ring-2 focus:ring-neutral-900/50",
                             idx === mobileSlide 
-                              ? "w-5 h-1.5 bg-neutral-900" 
-                              : "w-1.5 h-1.5 bg-neutral-900/30 hover:bg-neutral-900/50"
+                              ? "w-2 h-2 bg-neutral-900" 
+                              : "w-2 h-2 bg-neutral-900/30 hover:bg-neutral-900/50"
                           )}
                           aria-label={`Trang ${idx + 1}`}
                         />
