@@ -614,7 +614,7 @@ const ProjectsGallery = () => {
           margin: "0 auto"
         }}>
           {/* Slider */}
-          <div className="relative pb-12 sm:pb-16 md:pb-20">
+          <div className="relative pb-12 sm:pb-16 md:pb-20 sm:mt-24">
             <AnimatePresence initial={false} mode="wait">
               <motion.div
                 key={slide}
