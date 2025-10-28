@@ -649,12 +649,7 @@ const ProjectsGallery = () => {
 
                 {/* Mobile grid: 3 items per page, fixed layout: left tall (2 rows), right two stacked */}
                 <div
-                  className="grid grid-cols-2 grid-rows-2 gap-3 px-4 lg:hidden"
-                  style={{
-                    height: '72vh',
-                    gridTemplateColumns: '0.9fr 1.1fr',
-                    gridTemplateRows: '1fr 1fr'
-                  }}
+                  className="grid grid-cols-2 gap-3 px-4 lg:hidden"
                 >
                   {console.log('📱 Mobile grid items:', mobileSlides[mobileSlide])}
                   {(() => {
@@ -665,18 +660,18 @@ const ProjectsGallery = () => {
                     return (
                       <>
                         {a && (
-                          <div className="row-span-2">
-                            <FeaturedCard item={a} onOpen={openProject} index={0} fillHeight forceAspectRatio={9/16} />
+                          <div className="col-span-2">
+                            <FeaturedCard item={a} onOpen={openProject} index={0} forceAspectRatio={9/16} />
                           </div>
                         )}
                         {b && (
-                          <div className="">
-                            <FeaturedCard item={b} onOpen={openProject} index={1} fillHeight forceAspectRatio={16/9} />
+                          <div>
+                            <FeaturedCard item={b} onOpen={openProject} index={1} forceAspectRatio={16/9} />
                           </div>
                         )}
                         {c && (
-                          <div className="">
-                            <FeaturedCard item={c} onOpen={openProject} index={2} fillHeight forceAspectRatio={16/9} />
+                          <div>
+                            <FeaturedCard item={c} onOpen={openProject} index={2} forceAspectRatio={16/9} />
                           </div>
                         )}
                       </>
